@@ -1,0 +1,2850 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verdad o Reto 🔥</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --fire: #FF3D00;
+    --fire2: #FF6D00;
+    --gold: #FFD600;
+    --dark: #0A0A0F;
+    --dark2: #12121A;
+    --dark3: #1C1C28;
+    --card: #1A1A26;
+    --text: #F0F0FF;
+    --muted: #7070A0;
+    --truth: #00C2FF;
+    --dare: #FF3D00;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Fondo animado */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 20%, rgba(255,61,0,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 40% at 80% 80%, rgba(0,194,255,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 50% 50%, rgba(255,214,0,0.04) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .grain {
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.4;
+  }
+
+  .app {
+    position: relative;
+    z-index: 2;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ===== HEADER ===== */
+  header {
+    padding: 24px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, var(--fire), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .logo span {
+    background: linear-gradient(135deg, var(--truth), #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  .btn-sm {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+
+  .btn-ghost {
+    background: rgba(255,255,255,0.06);
+    color: var(--muted);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,0.1); color: var(--text); }
+
+  /* ===== SCREENS ===== */
+  .screen { display: none; flex-direction: column; align-items: center; padding: 40px 20px; flex: 1; }
+  .screen.active { display: flex; }
+
+  /* ===== SETUP SCREEN ===== */
+  .setup-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 10vw, 5.5rem);
+    letter-spacing: 4px;
+    text-align: center;
+    line-height: 0.9;
+    margin-bottom: 12px;
+  }
+  .setup-title .fire-text {
+    background: linear-gradient(135deg, var(--fire), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .setup-title .ice-text {
+    background: linear-gradient(135deg, var(--truth), #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .setup-sub {
+    color: var(--muted);
+    font-size: 1rem;
+    margin-bottom: 48px;
+    text-align: center;
+  }
+
+  .setup-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    width: 100%;
+    max-width: 800px;
+    margin-bottom: 32px;
+  }
+
+  @media (max-width: 600px) {
+    .setup-grid { grid-template-columns: 1fr; }
+  }
+
+  .setup-card {
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 24px;
+  }
+
+  .setup-card h3 {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .players-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+
+  .player-tag {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255,255,255,0.05);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    animation: slideIn 0.2s ease;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .player-tag .remove {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: all 0.15s;
+  }
+  .player-tag .remove:hover { color: var(--fire); background: rgba(255,61,0,0.1); }
+
+  .player-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-right: 10px;
+    flex-shrink: 0;
+  }
+
+  .add-input-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .input-field {
+    flex: 1;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .input-field:focus { border-color: rgba(255,255,255,0.25); }
+  .input-field::placeholder { color: var(--muted); }
+
+  .btn-add {
+    background: var(--fire);
+    border: none;
+    border-radius: 8px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.2s;
+    color: white;
+    font-weight: bold;
+  }
+  .btn-add:hover { background: var(--fire2); transform: scale(1.05); }
+
+  /* Questions tabs */
+  .q-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 16px;
+  }
+
+  .q-tab {
+    flex: 1;
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    background: rgba(255,255,255,0.05);
+    color: var(--muted);
+  }
+  .q-tab.active-truth    { background: rgba(0,194,255,0.15); color: var(--truth); border: 1px solid rgba(0,194,255,0.3); }
+  .q-tab.active-dare     { background: rgba(255,61,0,0.15);  color: var(--fire);  border: 1px solid rgba(255,61,0,0.3); }
+  .q-tab.active-nunca    { background: rgba(34,197,94,0.15); color: #22c55e;      border: 1px solid rgba(34,197,94,0.3); }
+  .q-tab.active-probable { background: rgba(251,146,60,0.15); color: #fb923c;     border: 1px solid rgba(251,146,60,0.3); }
+
+  .q-list {
+    max-height: 160px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  .q-item {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    background: rgba(255,255,255,0.04);
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 0.82rem;
+    color: var(--text);
+    gap: 8px;
+    animation: slideIn 0.2s ease;
+  }
+
+  .q-item span { flex: 1; line-height: 1.4; }
+
+  .difficulty-select {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    margin-bottom: 8px;
+    width: 100%;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .q-count {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  /* CTA Button */
+  .btn-start {
+    background: linear-gradient(135deg, var(--fire), var(--fire2));
+    border: none;
+    border-radius: 12px;
+    padding: 18px 56px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 3px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 0 40px rgba(255,61,0,0.3);
+    margin-top: 8px;
+  }
+  .btn-start:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 8px 50px rgba(255,61,0,0.5);
+  }
+  .btn-start:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* ===== GAME SCREEN ===== */
+  .game-screen {
+    justify-content: center;
+    gap: 0;
+    padding: 20px;
+  }
+
+  .turn-indicator {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  .turn-label {
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .turn-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 8vw, 4rem);
+    letter-spacing: 3px;
+    background: linear-gradient(135deg, var(--text), var(--muted));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Choice buttons */
+  .choice-container {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    max-width: 640px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+
+  .choice-btn {
+    flex: 1;
+    min-width: 100px;
+    padding: 24px 16px;
+    border-radius: 16px;
+    border: 2px solid;
+    cursor: pointer;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    letter-spacing: 3px;
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .choice-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .choice-truth {
+    background: rgba(0,194,255,0.08);
+    border-color: rgba(0,194,255,0.3);
+    color: var(--truth);
+  }
+  .choice-truth::before { background: radial-gradient(circle at center, rgba(0,194,255,0.15), transparent 70%); }
+  .choice-truth:hover { background: rgba(0,194,255,0.15); border-color: var(--truth); transform: translateY(-4px) scale(1.02); box-shadow: 0 12px 40px rgba(0,194,255,0.25); }
+  .choice-truth:hover::before { opacity: 1; }
+
+  .choice-dare {
+    background: rgba(255,61,0,0.08);
+    border-color: rgba(255,61,0,0.3);
+    color: var(--fire);
+  }
+  .choice-pozo {
+    background: rgba(236,72,153,0.08);
+    border-color: rgba(236,72,153,0.3);
+    color: #ec4899;
+  }
+  .choice-pozo::before { background: radial-gradient(circle at center, rgba(236,72,153,0.15), transparent 70%); }
+  .choice-pozo:hover { background: rgba(236,72,153,0.15); border-color: #ec4899; transform: translateY(-4px) scale(1.02); box-shadow: 0 12px 40px rgba(236,72,153,0.25); }
+  .choice-pozo:hover::before { opacity: 1; }
+  .choice-pozo:disabled { opacity: 0.2; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+
+  .badge-pozo { background: rgba(236,72,153,0.15); color: #ec4899; border: 1px solid rgba(236,72,153,0.3); }
+
+  .question-card.type-pozo { border-color: rgba(236,72,153,0.25); box-shadow: 0 0 60px rgba(236,72,153,0.15); }
+
+  .pozo-label {
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .pozo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    text-align: left;
+  }
+
+  .pozo-row {
+    background: rgba(236,72,153,0.07);
+    border: 1px solid rgba(236,72,153,0.15);
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  .pozo-row:nth-child(1) { animation-delay: 0s; }
+  .pozo-row:nth-child(2) { animation-delay: 0.07s; }
+  .pozo-row:nth-child(3) { animation-delay: 0.14s; }
+  .pozo-row:nth-child(4) { animation-delay: 0.21s; }
+
+  .pozo-girl-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 2px;
+    color: #ec4899;
+  }
+
+  .pozo-select {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    padding: 6px 10px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    outline: none;
+    cursor: pointer;
+    width: 100%;
+    transition: border-color 0.2s;
+  }
+  .pozo-select:focus { border-color: #ec4899; }
+  .pozo-select option { background: #1A1A26; }
+
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.85) translateY(8px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .gender-btn {
+    flex: 1;
+    padding: 16px;
+    border-radius: 12px;
+    border: 2px solid rgba(236,72,153,0.3);
+    background: rgba(236,72,153,0.08);
+    color: #ec4899;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .gender-btn:hover { background: rgba(236,72,153,0.2); border-color: #ec4899; transform: translateY(-3px) scale(1.04); box-shadow: 0 8px 24px rgba(236,72,153,0.25); }
+
+  /* ===== FLIP CARD ===== */
+  .question-card {
+    width: 100%;
+    max-width: 560px;
+    background: var(--card);
+    border-radius: 20px;
+    padding: 32px;
+    text-align: center;
+    position: relative;
+    display: none;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .question-card.visible {
+    display: block;
+    animation: flipIn 0.5s cubic-bezier(0.34, 1.4, 0.64, 1);
+  }
+
+  @keyframes flipIn {
+    0%   { opacity: 0; transform: perspective(600px) rotateY(-90deg) scale(0.85); }
+    60%  { transform: perspective(600px) rotateY(8deg) scale(1.02); }
+    100% { opacity: 1; transform: perspective(600px) rotateY(0deg) scale(1); }
+  }
+
+  .question-card.type-truth { border-color: rgba(0,194,255,0.25); box-shadow: 0 0 60px rgba(0,194,255,0.1); }
+  .question-card.type-dare  { border-color: rgba(255,61,0,0.25);   box-shadow: 0 0 60px rgba(255,61,0,0.1); }
+
+  .q-type-badge {
+    display: inline-block;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 3px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+
+  .badge-truth { background: rgba(0,194,255,0.15); color: var(--truth); border: 1px solid rgba(0,194,255,0.3); }
+  .badge-dare { background: rgba(255,61,0,0.15); color: var(--fire); border: 1px solid rgba(255,61,0,0.3); }
+
+  .question-text {
+    font-size: clamp(1.1rem, 3vw, 1.4rem);
+    line-height: 1.6;
+    color: var(--text);
+    margin-bottom: 28px;
+    font-weight: 400;
+  }
+
+  .difficulty-badge {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+  }
+
+  .card-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-done {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    border: none;
+    border-radius: 10px;
+    padding: 12px 28px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-done:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(34,197,94,0.3); }
+
+  .btn-skip {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 12px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-skip:hover { color: var(--text); background: rgba(255,255,255,0.1); }
+
+  /* Stats bar */
+  .stats-bar {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 28px;
+    justify-content: center;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .stat-truth .stat-num { color: var(--truth); }
+  .stat-dare .stat-num { color: var(--fire); }
+  .stat-turns .stat-num { color: var(--gold); }
+
+
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--dark3);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 0.85rem;
+    color: var(--text);
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 100;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Avatars de colores */
+  .av0 { background: rgba(255,61,0,0.25); color: var(--fire); }
+  .av1 { background: rgba(0,194,255,0.25); color: var(--truth); }
+  .av2 { background: rgba(255,214,0,0.25); color: var(--gold); }
+  .av3 { background: rgba(167,139,250,0.25); color: #a78bfa; }
+  .av4 { background: rgba(34,197,94,0.25); color: #22c55e; }
+  .av5 { background: rgba(236,72,153,0.25); color: #ec4899; }
+
+  .empty-state {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.85rem;
+    padding: 20px;
+  }
+
+  .view-screen {
+    max-width: 700px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .view-filters {
+    position: sticky;
+    top: 0;
+    background: var(--dark);
+    padding: 8px 0 4px;
+    z-index: 10;
+  }
+
+  .filter-pill {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.05);
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .filter-pill:hover { color: var(--text); background: rgba(255,255,255,0.1); }
+  .filter-pill.active { background: rgba(255,255,255,0.12); color: var(--text); border-color: rgba(255,255,255,0.25); }
+
+  .view-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-bottom: 40px;
+  }
+
+  .view-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    animation: slideIn 0.15s ease;
+  }
+
+  .view-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.85rem;
+    color: var(--muted);
+    min-width: 24px;
+    padding-top: 1px;
+  }
+
+  .view-diff {
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    align-self: flex-start;
+    margin-top: 2px;
+  }
+
+  .vd-suave  { background: rgba(34,197,94,0.12);  color: #22c55e; }
+  .vd-media  { background: rgba(234,179,8,0.12);  color: #eab308; }
+  .vd-fuerte { background: rgba(255,61,0,0.12);   color: var(--fire); }
+  .vd-extremo{ background: rgba(167,139,250,0.15); color: #a78bfa; }
+
+  .pulse {
+    animation: pulse 2s ease infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  /* ===== RULETA ===== */
+  .roulette-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.85);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 200;
+    backdrop-filter: blur(6px);
+  }
+  .roulette-overlay.hidden { display: none; }
+
+  .roulette-box {
+    text-align: center;
+    animation: cardAppear 0.3s ease;
+  }
+
+  .roulette-label {
+    font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 16px;
+  }
+
+  .roulette-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 12vw, 6rem);
+    letter-spacing: 4px;
+    background: linear-gradient(135deg, var(--fire), var(--gold));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    animation: roulettePop 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  @keyframes roulettePop {
+    from { opacity: 0; transform: scale(0.4) rotate(-10deg); }
+    to   { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+
+  .roulette-spinning {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2rem, 8vw, 4rem);
+    letter-spacing: 4px;
+    color: var(--muted);
+    animation: spinNames 0.1s ease infinite;
+  }
+
+  @keyframes spinNames {
+    0%  { opacity: 1; }
+    50% { opacity: 0.3; }
+    100%{ opacity: 1; }
+  }
+
+  .roulette-btn {
+    margin-top: 28px;
+    background: linear-gradient(135deg, var(--fire), var(--fire2));
+    border: none; border-radius: 12px;
+    padding: 14px 40px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem; letter-spacing: 3px;
+    color: white; cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 0 30px rgba(255,61,0,0.3);
+  }
+  .roulette-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(255,61,0,0.5); }
+
+  /* ===== COMODINES ===== */
+  .comodin-bar {
+    display: flex; gap: 6px; justify-content: center;
+    margin-bottom: 12px; flex-wrap: wrap;
+  }
+
+  .comodin-chip {
+    padding: 4px 12px; border-radius: 20px;
+    font-size: 0.78rem; font-weight: 600;
+    border: none; cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .comodin-chip:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  .com-skip   { background: rgba(255,255,255,0.08); color: var(--text); border: 1px solid rgba(255,255,255,0.15); }
+  .com-skip:not(:disabled):hover   { background: rgba(255,255,255,0.15); }
+  .com-double { background: rgba(255,214,0,0.12); color: var(--gold); border: 1px solid rgba(255,214,0,0.25); }
+  .com-double:not(:disabled):hover { background: rgba(255,214,0,0.2); }
+  .com-group  { background: rgba(167,139,250,0.12); color: #a78bfa; border: 1px solid rgba(167,139,250,0.25); }
+  .com-group:not(:disabled):hover  { background: rgba(167,139,250,0.2); }
+
+  /* ===== PUNTOS / RACHA ===== */
+  .scores-bar {
+    display: flex; gap: 10px; justify-content: center;
+    flex-wrap: wrap; margin-bottom: 16px;
+  }
+
+  .score-chip {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--card); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px; padding: 4px 12px;
+    font-size: 0.8rem;
+  }
+
+  .score-avatar {
+    width: 20px; height: 20px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.65rem; font-weight: 700;
+  }
+
+  .score-pts {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem; letter-spacing: 1px; color: var(--gold);
+  }
+
+  .streak-badge {
+    background: rgba(255,61,0,0.2); color: var(--fire);
+    border-radius: 4px; padding: 1px 5px;
+    font-size: 0.7rem; font-weight: 700;
+  }
+
+  /* ===== TEMPORIZADOR ===== */
+  .timer-ring-wrap {
+    position: relative; width: 64px; height: 64px;
+    margin: 0 auto 16px;
+  }
+
+  .timer-ring-wrap svg { transform: rotate(-90deg); }
+
+  .timer-bg  { fill: none; stroke: rgba(255,255,255,0.08); stroke-width: 5; }
+  .timer-arc { fill: none; stroke-width: 5; stroke-linecap: round;
+               transition: stroke-dashoffset 1s linear, stroke 0.3s; }
+
+  .timer-num {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem;
+    letter-spacing: 1px; color: var(--text);
+  }
+
+  /* ===== MODO VERGÜENZA ===== */
+  .shame-banner {
+    background: linear-gradient(135deg, rgba(167,139,250,0.15), rgba(236,72,153,0.15));
+    border: 1px solid rgba(167,139,250,0.3);
+    border-radius: 12px; padding: 10px 16px;
+    text-align: center; margin-bottom: 16px;
+    animation: cardAppear 0.4s ease;
+    font-size: 0.85rem; color: #a78bfa;
+    display: none;
+  }
+  .shame-banner.visible { display: block; }
+
+  /* ===== HISTORIAL ===== */
+  .historial-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 150;
+    display: flex; align-items: flex-end; justify-content: center;
+    backdrop-filter: blur(4px);
+    transition: opacity 0.3s;
+  }
+  .historial-overlay.hidden { display: none; }
+
+  .historial-panel {
+    background: var(--dark2);
+    border-radius: 20px 20px 0 0;
+    width: 100%; max-width: 600px;
+    max-height: 75vh;
+    padding: 24px;
+    overflow-y: auto;
+    animation: slideUp 0.35s cubic-bezier(0.34,1.2,0.64,1);
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+
+  .historial-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .historial-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem; letter-spacing: 2px;
+  }
+
+  .historial-close {
+    background: rgba(255,255,255,0.08); border: none;
+    border-radius: 8px; padding: 6px 12px;
+    color: var(--muted); cursor: pointer; font-size: 1rem;
+    transition: all 0.2s;
+  }
+  .historial-close:hover { color: var(--text); background: rgba(255,255,255,0.14); }
+
+  .historial-item {
+    display: flex; gap: 10px; align-items: flex-start;
+    padding: 10px 12px; border-radius: 10px;
+    background: rgba(255,255,255,0.04);
+    margin-bottom: 6px; font-size: 0.85rem; line-height: 1.4;
+    animation: slideIn 0.15s ease;
+  }
+
+  .hist-player {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem; letter-spacing: 1px;
+    white-space: nowrap; color: var(--gold);
+  }
+
+  .hist-type {
+    font-size: 0.7rem; padding: 2px 7px; border-radius: 4px;
+    white-space: nowrap; flex-shrink: 0; align-self: center;
+  }
+  .hist-truth { background: rgba(0,194,255,0.12); color: var(--truth); }
+  .hist-dare  { background: rgba(255,61,0,0.12);  color: var(--fire); }
+  .hist-pozo  { background: rgba(236,72,153,0.12); color: #ec4899; }
+  .hist-nunca    { background: rgba(34,197,94,0.12);  color: #22c55e; }
+  .hist-probable { background: rgba(251,146,60,0.12); color: #fb923c; }
+
+  /* ===== AVATAR EMOJI PICKER ===== */
+  .avatar-emoji {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: all 0.15s; flex-shrink: 0;
+  }
+  .avatar-emoji:hover { transform: scale(1.15); border-color: rgba(255,255,255,0.3); }
+
+  .emoji-picker-popup {
+    position: fixed; z-index: 300;
+    background: var(--dark3);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px; padding: 10px;
+    display: grid; grid-template-columns: repeat(6, 1fr);
+    gap: 4px; box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    animation: popIn 0.15s ease;
+  }
+
+  .emoji-picker-popup.hidden { display: none; }
+
+  .emoji-opt {
+    font-size: 1.3rem; cursor: pointer;
+    padding: 4px; border-radius: 6px; text-align: center;
+    transition: background 0.1s;
+  }
+  .emoji-opt:hover { background: rgba(255,255,255,0.1); }
+
+  /* ===== TEMA SELECTOR ===== */
+  .theme-pills {
+    display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px;
+  }
+
+  .theme-pill {
+    padding: 5px 12px; border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.05);
+    color: var(--muted); font-size: 0.78rem; font-weight: 500;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .theme-pill.active  { background: rgba(255,255,255,0.12); color: var(--text); border-color: rgba(255,255,255,0.25); }
+  .theme-pill:hover   { color: var(--text); }
+
+  /* ===== YO NUNCA ===== */
+  .choice-nunca {
+    background: rgba(34,197,94,0.08);
+    border-color: rgba(34,197,94,0.3);
+    color: #22c55e;
+  }
+  .choice-nunca::before { background: radial-gradient(circle at center, rgba(34,197,94,0.15), transparent 70%); }
+  .choice-nunca:hover { background: rgba(34,197,94,0.15); border-color: #22c55e; transform: translateY(-4px) scale(1.02); box-shadow: 0 12px 40px rgba(34,197,94,0.25); }
+  .choice-nunca:hover::before { opacity: 1; }
+
+  /* ===== QUIÉN ES MÁS PROBABLE ===== */
+  .choice-probable {
+    background: rgba(251,146,60,0.08);
+    border-color: rgba(251,146,60,0.3);
+    color: #fb923c;
+  }
+  .choice-probable::before { background: radial-gradient(circle at center, rgba(251,146,60,0.15), transparent 70%); }
+  .choice-probable:hover { background: rgba(251,146,60,0.15); border-color: #fb923c; transform: translateY(-4px) scale(1.02); box-shadow: 0 12px 40px rgba(251,146,60,0.25); }
+  .choice-probable:hover::before { opacity: 1; }
+
+  .badge-probable { background: rgba(251,146,60,0.15); color: #fb923c; border: 1px solid rgba(251,146,60,0.3); }
+  .question-card.type-probable { border-color: rgba(251,146,60,0.25); box-shadow: 0 0 60px rgba(251,146,60,0.12); }
+
+  .probable-votes {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    justify-content: center; margin: 20px 0;
+  }
+
+  .probable-vote-chip {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(251,146,60,0.08);
+    border: 1px solid rgba(251,146,60,0.2);
+    border-radius: 20px; padding: 6px 14px;
+    font-size: 0.85rem; cursor: pointer;
+    transition: all 0.2s; user-select: none; position: relative;
+  }
+  .probable-vote-chip.voted {
+    background: rgba(251,146,60,0.25);
+    border-color: #fb923c;
+    color: #fb923c; font-weight: 600;
+  }
+  .probable-vote-chip .vote-count {
+    position: absolute; top: -6px; right: -6px;
+    background: #fb923c; color: #000;
+    border-radius: 50%; width: 18px; height: 18px;
+    font-size: 0.65rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .probable-vote-chip:hover { transform: scale(1.05); }
+
+  .probable-result {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem; letter-spacing: 2px;
+    color: #fb923c; margin-top: 8px; min-height: 1.6rem;
+  }
+
+  .badge-nunca { background: rgba(34,197,94,0.15); color: #22c55e; border: 1px solid rgba(34,197,94,0.3); }
+  .question-card.type-nunca { border-color: rgba(34,197,94,0.25); box-shadow: 0 0 60px rgba(34,197,94,0.12); }
+
+  .nunca-subtitle {
+    font-size: 0.78rem; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 20px;
+  }
+
+  .nunca-votes {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    justify-content: center; margin: 20px 0;
+  }
+
+  .nunca-vote-chip {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(34,197,94,0.08);
+    border: 1px solid rgba(34,197,94,0.2);
+    border-radius: 20px; padding: 6px 14px;
+    font-size: 0.85rem; cursor: pointer;
+    transition: all 0.2s; user-select: none;
+  }
+  .nunca-vote-chip.voted {
+    background: rgba(34,197,94,0.25);
+    border-color: #22c55e;
+    color: #22c55e; font-weight: 600;
+  }
+  .nunca-vote-chip:hover { transform: scale(1.05); }
+  .slider-row {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+  }
+  .slider-row input[type=range] {
+    flex: 1; accent-color: #a78bfa; height: 4px; cursor: pointer;
+  }
+  .slider-val {
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem;
+    color: #a78bfa; min-width: 36px; text-align: right;
+  }
+
+  /* ===== SETTINGS PANEL ===== */
+  .settings-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 400;
+    backdrop-filter: blur(4px);
+    display: flex; justify-content: flex-end;
+  }
+  .settings-overlay.hidden { display: none; }
+
+  .settings-panel {
+    background: var(--dark2);
+    width: min(380px, 100vw);
+    height: 100%;
+    overflow-y: auto;
+    padding: 28px 24px 48px;
+    animation: slideInRight 0.3s cubic-bezier(0.34,1.1,0.64,1);
+    border-left: 1px solid rgba(255,255,255,0.07);
+  }
+
+  @keyframes slideInRight {
+    from { transform: translateX(100%); opacity: 0; }
+    to   { transform: translateX(0);   opacity: 1; }
+  }
+
+  .settings-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 28px;
+  }
+
+  .settings-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem; letter-spacing: 3px;
+  }
+
+  .settings-close {
+    background: rgba(255,255,255,0.08); border: none;
+    border-radius: 8px; padding: 7px 13px;
+    color: var(--muted); cursor: pointer; font-size: 1rem;
+    transition: all 0.2s;
+  }
+  .settings-close:hover { color: var(--text); background: rgba(255,255,255,0.14); }
+
+  .settings-section {
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .settings-section:last-child { border-bottom: none; }
+
+  .settings-section-title {
+    font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 14px; font-weight: 600;
+  }
+
+  .setting-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 0; gap: 12px;
+  }
+
+  .setting-row-label {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 0.88rem; color: var(--text); flex: 1;
+  }
+
+  .setting-row-label small {
+    display: block; color: var(--muted); font-size: 0.74rem; margin-top: 1px;
+  }
+
+  /* Toggle switch */
+  .toggle-wrap { position: relative; width: 42px; height: 24px; flex-shrink: 0; }
+  .toggle-wrap input { opacity: 0; width: 0; height: 0; position: absolute; }
+  .toggle-slider {
+    position: absolute; inset: 0; border-radius: 24px;
+    background: rgba(255,255,255,0.1); cursor: pointer;
+    transition: background 0.25s;
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+  .toggle-slider::before {
+    content: ''; position: absolute;
+    width: 18px; height: 18px; border-radius: 50%;
+    left: 2px; top: 2px;
+    background: var(--muted);
+    transition: transform 0.25s, background 0.25s;
+  }
+  .toggle-wrap input:checked + .toggle-slider { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.25); }
+  .toggle-wrap input:checked + .toggle-slider::before { transform: translateX(18px); background: var(--text); }
+
+  /* Coloured toggles */
+  .toggle-fire input:checked + .toggle-slider   { background: rgba(255,61,0,0.25);    border-color: rgba(255,61,0,0.5); }
+  .toggle-fire input:checked + .toggle-slider::before { background: var(--fire); }
+  .toggle-purple input:checked + .toggle-slider { background: rgba(167,139,250,0.25); border-color: rgba(167,139,250,0.5); }
+  .toggle-purple input:checked + .toggle-slider::before { background: #a78bfa; }
+  .toggle-pink input:checked + .toggle-slider   { background: rgba(236,72,153,0.25);  border-color: rgba(236,72,153,0.5); }
+  .toggle-pink input:checked + .toggle-slider::before { background: #ec4899; }
+  .toggle-green input:checked + .toggle-slider  { background: rgba(34,197,94,0.25);   border-color: rgba(34,197,94,0.5); }
+  .toggle-green input:checked + .toggle-slider::before { background: #22c55e; }
+  .toggle-orange input:checked + .toggle-slider { background: rgba(251,146,60,0.25);  border-color: rgba(251,146,60,0.5); }
+  .toggle-orange input:checked + .toggle-slider::before { background: #fb923c; }
+
+  .settings-select {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px; padding: 7px 10px;
+    color: var(--text); font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem; width: 100%; margin-top: 6px; cursor: pointer;
+    outline: none;
+  }
+  .settings-select:focus { border-color: rgba(255,255,255,0.25); }
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div class="app">
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">🔥 Verdad <span>o Reto</span></div>
+    <div class="header-actions">
+      <button class="btn-sm btn-ghost" onclick="showScreen('setup')">Inicio</button>
+      <button class="btn-sm btn-ghost" onclick="showScreen('view')">📋 Preguntas</button>
+      <button class="btn-sm btn-ghost" onclick="openSettings()" title="Ajustes" style="font-size:1.1rem; padding:6px 10px;">⚙️</button>
+    </div>
+  </header>
+
+  <!-- SETTINGS PANEL -->
+  <div class="settings-overlay hidden" id="settingsOverlay" onclick="closeSettingsOutside(event)">
+    <div class="settings-panel" id="settingsPanel">
+      <div class="settings-header">
+        <span class="settings-title">⚙️ Ajustes</span>
+        <button class="settings-close" onclick="closeSettings()">✕ Cerrar</button>
+      </div>
+
+      <!-- MODOS DE JUEGO -->
+      <div class="settings-section">
+        <div class="settings-section-title">🎮 Modos de juego</div>
+
+        <div class="setting-row">
+          <div class="setting-row-label">
+            <span>💘 Pozo</span>
+            <small>Kiss / Marry / Kill del grupo</small>
+          </div>
+          <label class="toggle-wrap toggle-pink">
+            <input type="checkbox" id="togglePozo" checked onchange="syncModeButtons()">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-row-label">
+            <span>🙅 Yo Nunca</span>
+            <small>¿Quién lo ha hecho?</small>
+          </div>
+          <label class="toggle-wrap toggle-green">
+            <input type="checkbox" id="toggleNunca" checked onchange="syncModeButtons()">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-row-label">
+            <span>🤔 ¿Quién es más probable?</span>
+            <small>El grupo vota</small>
+          </div>
+          <label class="toggle-wrap toggle-orange">
+            <input type="checkbox" id="toggleProbable" checked onchange="syncModeButtons()">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- DIFICULTAD Y TEMA -->
+      <div class="settings-section">
+        <div class="settings-section-title">🎯 Preguntas</div>
+
+        <div class="setting-row" style="flex-direction:column; align-items:flex-start; gap:6px;">
+          <span style="font-size:0.88rem;">Dificultad</span>
+          <select class="settings-select" id="difficultyFilter" onchange="renderSetupQList()">
+            <option value="suave">🟢 Solo suaves</option>
+            <option value="media">🟢🟡 Suaves y medias</option>
+            <option value="fuerte">🔴 Solo difíciles</option>
+            <option value="all" selected>🌈 Todas</option>
+            <option value="extremo">💀 Todas + Extremo</option>
+            <option value="soloextremo">🟣 Solo extremo</option>
+          </select>
+        </div>
+
+        <div class="setting-row" style="flex-direction:column; align-items:flex-start; gap:6px; padding-top:14px;">
+          <span style="font-size:0.88rem;">🎭 Tema</span>
+          <div class="theme-pills" id="themePills" style="margin-bottom:0;">
+            <button class="theme-pill active" onclick="setTheme('all', this)">🌈 Todos</button>
+            <button class="theme-pill" onclick="setTheme('crush', this)">💘 Crush</button>
+            <button class="theme-pill" onclick="setTheme('verguenza', this)">😳 Vergüenza</button>
+            <button class="theme-pill" onclick="setTheme('secretos', this)">🤫 Secretos</button>
+            <button class="theme-pill" onclick="setTheme('hottakes', this)">🔥 Hot Takes</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MECÁNICAS -->
+      <div class="settings-section">
+        <div class="settings-section-title">⚡ Mecánicas</div>
+
+        <div class="setting-row">
+          <div class="setting-row-label">
+            <span>⏱️ Temporizador en retos</span>
+            <small>30 segundos por reto</small>
+          </div>
+          <label class="toggle-wrap toggle-fire">
+            <input type="checkbox" id="timerToggle">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-row-label">
+            <span>😳 Modo vergüenza</span>
+            <small>Sube la dificultad aleatoriamente</small>
+          </div>
+          <label class="toggle-wrap toggle-purple">
+            <input type="checkbox" id="shameToggle" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div id="shameSliderRow" class="setting-row" style="flex-direction:column; align-items:flex-start; gap:4px; padding-top:0;">
+          <small style="color:var(--muted); font-size:0.75rem;">Frecuencia de vergüenza</small>
+          <div class="slider-row" style="width:100%; margin-bottom:0;">
+            <input type="range" id="shameSlider" min="2" max="40" value="15" step="1"
+              oninput="document.getElementById('shameVal').textContent=this.value+'%'">
+            <span class="slider-val" id="shameVal">15%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RESTRICCIONES -->
+      <div class="settings-section">
+        <div class="settings-section-title">🚫 Restricciones</div>
+
+        <div class="setting-row">
+          <div class="setting-row-label">
+            <span>📵 Excluir móvil</span>
+            <small>Modo cole — sin preguntas que necesiten teléfono</small>
+          </div>
+          <label class="toggle-wrap toggle-purple">
+            <input type="checkbox" id="noPhoneToggle" onchange="renderSetupQList()">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+
+  <!-- SETUP SCREEN -->
+  <div class="screen active" id="screen-setup">
+    <div class="setup-title">
+      <div class="fire-text">VERDAD</div>
+      <div class="ice-text">O RETO</div>
+    </div>
+    <p class="setup-sub">Añade jugadores y empieza la diversión 🔥</p>
+
+    <div class="setup-grid">
+      <!-- Jugadores -->
+      <div class="setup-card">
+        <h3>👥 Jugadores</h3>
+        <div class="players-list" id="playersList">
+          <div class="empty-state pulse">Añade al menos 2 jugadores</div>
+        </div>
+        <div class="add-input-row">
+          <input class="input-field" id="playerInput" placeholder="Nombre del jugador..." maxlength="20"
+            onkeydown="if(event.key==='Enter') addPlayer()">
+          <button class="btn-add" onclick="addPlayer()">+</button>
+        </div>
+      </div>
+
+      <!-- Configuración -->
+      <div class="setup-card">
+        <h3>📋 Preguntas disponibles</h3>
+        <div class="q-tabs">
+          <button class="q-tab active-truth" onclick="switchSetupTab('truth')" id="setupTabTruth">💬 Verdades</button>
+          <button class="q-tab" onclick="switchSetupTab('dare')" id="setupTabDare">🔥 Retos</button>
+        </div>
+        <div class="q-count" id="qCount">Cargando preguntas...</div>
+        <div class="q-list" id="setupQList"></div>
+        <p style="font-size:0.78rem; color:var(--muted); margin-top:10px; text-align:center;">
+          Cambia dificultad y tema en <button onclick="openSettings()" style="background:none;border:none;color:var(--muted);font-size:0.78rem;cursor:pointer;text-decoration:underline;">⚙️ Ajustes</button>
+        </p>
+      </div>
+    </div>
+
+    <button class="btn-start" id="startBtn" onclick="startGame()" disabled>
+      EMPEZAR 🔥
+    </button>
+  </div>
+
+  <!-- GAME SCREEN -->
+  <div class="screen game-screen" id="screen-game">
+
+    <!-- Shame banner -->
+    <div class="shame-banner" id="shameBanner">😳 ¡MOMENTO VERGÜENZA! Esta pregunta la elige el grupo</div>
+
+    <!-- Scores -->
+    <div class="scores-bar" id="scoresBar"></div>
+
+    <!-- Stats -->
+    <div class="stats-bar">
+      <div class="stat stat-turns">
+        <div class="stat-num" id="statTurns">0</div>
+        <div class="stat-label">Turno</div>
+      </div>
+      <div class="stat stat-truth">
+        <div class="stat-num" id="statTruths">0</div>
+        <div class="stat-label">Verdades</div>
+      </div>
+      <div class="stat stat-dare">
+        <div class="stat-num" id="statDares">0</div>
+        <div class="stat-label">Retos</div>
+      </div>
+      <div class="stat" style="cursor:pointer;" onclick="openHistorial()">
+        <div class="stat-num" style="color:var(--muted);font-size:1.3rem;">📜</div>
+        <div class="stat-label">Historial</div>
+      </div>
+    </div>
+
+    <!-- Turno actual -->
+    <div class="turn-indicator">
+      <div class="turn-label">Le toca a</div>
+      <div class="turn-name" id="currentPlayerName">—</div>
+    </div>
+
+    <!-- Comodines -->
+    <div class="comodin-bar" id="comodinBar"></div>
+
+    <!-- Botones de elección -->
+    <div class="choice-container" id="choiceContainer">
+      <button class="choice-btn choice-truth" onclick="chooseType('truth')">
+        💬<br>VERDAD
+      </button>
+      <button class="choice-btn choice-dare" onclick="chooseType('dare')">
+        🔥<br>RETO
+      </button>
+      <button class="choice-btn choice-pozo" id="pozoBtn" onclick="choosePozo()">
+        💘<br>POZO
+      </button>
+      <button class="choice-btn choice-nunca" id="btnNunca" onclick="chooseNunca()">
+        🙅<br>YO NUNCA
+      </button>
+      <button class="choice-btn choice-probable" id="btnProbable" onclick="chooseProbable()">
+        🤔<br>¿QUIÉN?
+      </button>
+    </div>
+
+    <!-- Gender picker card -->
+    <div class="question-card" id="genderCard" style="max-width:400px;">
+      <div class="q-type-badge badge-pozo">💘 POZO</div>
+      <p style="font-size:1rem; margin-bottom:6px; color:var(--text);">¿Cuál es tu género?</p>
+      <p class="pozo-label" style="margin-bottom:24px;">Necesito saberlo para el pozo</p>
+      <div style="display:flex; gap:12px; justify-content:center;">
+        <button class="gender-btn" onclick="selectGender('chico')">👦 Chico</button>
+        <button class="gender-btn" onclick="selectGender('chica')">👧 Chica</button>
+      </div>
+    </div>
+
+    <!-- Pozo card -->
+    <div class="question-card" id="pozoCard" style="max-width:620px;">
+      <div class="q-type-badge badge-pozo">💘 POZO</div>
+      <p class="pozo-label" style="margin-bottom:20px;">Asigna a cada uno su destino 👇</p>
+      <div class="pozo-grid" id="pozoGrid"></div>
+      <div class="card-actions" style="margin-top:24px;">
+        <button class="btn-done" id="pozoHechoBtn" onclick="nextTurn(true)" disabled style="opacity:0.35;">✓ Hecho</button>
+      </div>
+    </div>
+
+    <!-- Yo Nunca card -->
+    <div class="question-card" id="nuncaCard" style="max-width:580px;">
+      <div class="q-type-badge badge-nunca">🙅 YO NUNCA</div>
+      <div class="difficulty-badge" id="nuncaDiffBadge">🟢 Suave</div>
+      <div class="question-text" id="nuncaText">Yo nunca he...</div>
+      <p class="nunca-subtitle">¿Quién lo ha hecho? Toca tu nombre 👇</p>
+      <div class="nunca-votes" id="nuncaVotes"></div>
+      <div class="card-actions">
+        <button class="btn-done" onclick="nextTurn(true)">✓ Siguiente</button>
+      </div>
+    </div>
+
+    <!-- Quién es más probable card -->
+    <div class="question-card" id="probableCard" style="max-width:580px;">
+      <div class="q-type-badge badge-probable">🤔 ¿QUIÉN ES MÁS PROBABLE?</div>
+      <div class="difficulty-badge" id="probableDiffBadge">🟢 Suave</div>
+      <div class="question-text" id="probableText">¿Quién es más probable que...?</div>
+      <p class="nunca-subtitle">Vota a quién le pega más 👇</p>
+      <div class="probable-votes" id="probableVotes"></div>
+      <div class="probable-result" id="probableResult"></div>
+      <div class="card-actions" style="margin-top:16px;">
+        <button class="btn-done" onclick="revealProbable()" id="probableRevealBtn" style="background:linear-gradient(135deg,#fb923c,#f97316);">👁️ Revelar</button>
+        <button class="btn-done" onclick="nextTurn(true)" id="probableNextBtn" style="display:none;">✓ Siguiente</button>
+      </div>
+    </div>
+
+    <!-- Tarjeta de pregunta -->
+    <div class="question-card" id="questionCard">
+      <!-- Timer -->
+      <div class="timer-ring-wrap" id="timerWrap" style="display:none;">
+        <svg width="64" height="64" viewBox="0 0 64 64">
+          <circle class="timer-bg" cx="32" cy="32" r="28"/>
+          <circle class="timer-arc" id="timerArc" cx="32" cy="32" r="28"
+            stroke-dasharray="175.9" stroke-dashoffset="0" stroke="var(--fire)"/>
+        </svg>
+        <div class="timer-num" id="timerNum">30</div>
+      </div>
+      <div class="q-type-badge" id="qTypeBadge">VERDAD</div>
+      <div class="difficulty-badge" id="qDiffBadge">🟢 Suave</div>
+      <div class="question-text" id="questionText">¿Cuál es tu mayor vergüenza?</div>
+      <div class="card-actions">
+        <button class="btn-done" onclick="nextTurn(true)">✓ Hecho</button>
+        <button class="btn-skip" onclick="nextTurn(false)">↷ Saltar</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- VIEW SCREEN -->
+  <div class="screen" id="screen-view">
+    <div class="view-screen">
+      <div class="manage-title" style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;letter-spacing:3px;margin-bottom:8px;text-align:center;">📋 Todas las preguntas</div>
+      <p style="color:var(--muted);font-size:0.9rem;text-align:center;margin-bottom:24px;">Solo lectura · <span id="viewTotal">0</span> preguntas en total</p>
+
+      <!-- Filtros -->
+      <div class="view-filters">
+        <div class="q-tabs" style="margin-bottom:12px;">
+          <button class="q-tab active-truth" id="viewTabTruth" onclick="switchViewTab('truth')">💬 Verdades</button>
+          <button class="q-tab" id="viewTabDare" onclick="switchViewTab('dare')">🔥 Retos</button>
+          <button class="q-tab" id="viewTabNunca" onclick="switchViewTab('nunca')">🙅 Yo Nunca</button>
+          <button class="q-tab" id="viewTabProbable" onclick="switchViewTab('probable')">🤔 ¿Quién?</button>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+          <button class="filter-pill active" onclick="setViewDiff('all', this)">Todas</button>
+          <button class="filter-pill" onclick="setViewDiff('suave', this)">🟢 Suave</button>
+          <button class="filter-pill" onclick="setViewDiff('media', this)">🟡 Media</button>
+          <button class="filter-pill" onclick="setViewDiff('fuerte', this)">🔴 Difícil</button>
+          <button class="filter-pill" onclick="setViewDiff('extremo', this)">🟣 Extremo</button>
+        </div>
+        <div style="color:var(--muted);font-size:0.8rem;margin-bottom:12px;" id="viewCount"></div>
+      </div>
+
+      <div class="view-list" id="viewList"></div>
+    </div>
+  </div>
+  <!-- HISTORIAL OVERLAY -->
+  <div class="historial-overlay hidden" id="historialOverlay" onclick="closeHistorial(event)">
+    <div class="historial-panel">
+      <div class="historial-header">
+        <span class="historial-title">📜 Historial</span>
+        <button class="historial-close" onclick="document.getElementById('historialOverlay').classList.add('hidden')">✕ Cerrar</button>
+      </div>
+      <div id="historialList"><div class="empty-state">Aún no hay turnos jugados</div></div>
+    </div>
+  </div>
+
+  <!-- EMOJI PICKER -->
+  <div class="emoji-picker-popup hidden" id="emojiPicker"></div>
+
+  <!-- RULETA OVERLAY -->
+  <div class="roulette-overlay hidden" id="rouletteOverlay">
+    <div class="roulette-box">
+      <div class="roulette-label">Le toca a...</div>
+      <div id="rouletteName" class="roulette-spinning">—</div>
+      <div id="rouletteFinal" style="display:none;">
+        <div class="roulette-name" id="rouletteFinalName"></div>
+        <button class="roulette-btn" onclick="closeRoulette()">¡EMPEZAR! 🔥</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+
+const SYSTEM_QUESTIONS = {
+  truth: [
+    { text: "¿Cuál es la mentira más grande que has dicho y a quién?", diff: "media", system: true },
+    { text: "¿Has tenido alguna vez un crush con alguien de este grupo?", diff: "media", system: true },
+    { text: "¿Cuál es tu mayor inseguridad?", diff: "media", system: true },
+    { text: "¿Qué es lo peor que has pensado de alguien de aquí?", diff: "fuerte", system: true },
+    { text: "¿Has cotilleado algo privado de alguien? ¿De quién?", diff: "media", system: true },
+    { text: "¿Cuál es el mensaje más vergonzoso que tienes en el móvil?", diff: "suave", system: true },
+    { text: "¿Cuál ha sido tu mayor metedura de pata en público?", diff: "suave", system: true },
+    { text: "¿Cuál es tu canción favorita ahora mismo y por qué te da vergüenza admitirlo?", diff: "suave", system: true },
+    { text: "¿Cuál es el cumplido más raro que te han hecho?", diff: "suave", system: true },
+    { text: "¿Tienes algún apodo que no le hayas contado a nadie de aquí?", diff: "suave", system: true },
+    { text: "¿Cuál es la excusa más absurda que has inventado para no salir de casa?", diff: "suave", system: true },
+    { text: "¿A qué personaje de serie o película te pareces más y por qué?", diff: "suave", system: true },
+    { text: "¿Cuál es el alimento que odias pero finges que te gusta para quedar bien?", diff: "suave", system: true },
+    { text: "¿Alguna vez te has reído en un momento completamente inapropiado? ¿En cuál?", diff: "suave", system: true },
+    { text: "¿Cuál es la cosa más infantil que sigues haciendo en secreto?", diff: "suave", system: true },
+    { text: "¿Tienes algún miedo ridículo que nadie esperaría de ti?", diff: "suave", system: true },
+    { text: "¿Cuál es el peor regalo que has recibido y cómo fingiste que te gustaba?", diff: "suave", system: true },
+    { text: "¿Alguna vez has fingido no ver a alguien conocido para no tener que saludarle?", diff: "suave", system: true },
+    { text: "¿Cuál es la cosa más rara que has dicho mientras dormías, según alguien?", diff: "suave", system: true },
+    { text: "¿Cuál es el talento secreto más inútil que tienes?", diff: "suave", system: true },
+    { text: "¿Cuántas veces has visto tu serie o película favorita?", diff: "suave", system: true },
+    { text: "¿Qué hábito tuyo secreto te da más vergüenza?", diff: "media", system: true },
+    { text: "¿Has hecho alguna vez algo ilegal? ¿El qué?", diff: "fuerte", system: true },
+    { text: "¿A quién de aquí llamarías si estuvieras en un lío serio?", diff: "suave", system: true },
+    { text: "¿Cuál es la cosa más rara que has buscado en Google?", diff: "suave", system: true },
+    { text: "¿Alguna vez has fingido estar enfermo para evitar a alguien?", diff: "suave", system: true },
+    { text: "¿Cuál es el mayor secreto que guardas sobre tu vida amorosa?", diff: "fuerte", system: true },
+    { text: "¿Cuánto dinero tienes ahora mismo en tu cuenta bancaria?", diff: "media", system: true },
+    { text: "¿Alguna vez has hablado mal de un amigo a sus espaldas?", diff: "media", system: true },
+    { text: "¿Cuál es la persona famosa con la que fantaseas?", diff: "suave", system: true },
+    { text: "¿Qué haría tu familia si supiera lo que haces los fines de semana?", diff: "media", system: true },
+    // nuevas
+    { text: "¿Es verdad que te parece peligrosamente atractivo/a alguien de aquí?", diff: "media", system: true },
+    { text: "¿Es verdad que has stalkeado a alguien recientemente?", diff: "suave", system: true },
+    { text: "¿Es verdad que tienes una red flag secreta que nadie conoce?", diff: "media", system: true },
+    { text: "¿Es verdad que tendrías una cita con alguien de esta sala?", diff: "media", system: true },
+    { text: "¿Es verdad que alguna vez has mentido para conseguir una cita?", diff: "media", system: true },
+    { text: "¿Es verdad que tu relación más corta acabó por algo vergonzoso?", diff: "media", system: true },
+    { text: "¿Es verdad que has besado a más de una persona en la misma noche?", diff: "media", system: true },
+    { text: "¿Es verdad que lo más raro que has buscado en Google no te atreves a contarlo?", diff: "media", system: true },
+    { text: "¿Es verdad que tu primer crush famoso era bastante cuestionable?", diff: "suave", system: true },
+    { text: "¿Es verdad que te gusta alguien de esta sala más de lo que aparentas?", diff: "fuerte", system: true },
+    { text: "¿Es verdad que has fingido estar ocupado/a para evitar a alguien que te gusta demasiado?", diff: "media", system: true },
+    { text: "¿Es verdad que tienes un tipo físico que nadie esperaría de ti?", diff: "suave", system: true },
+    { text: "¿Es verdad que alguna vez has insinuado algo a alguien y luego te hiciste el/la inocente?", diff: "media", system: true },
+    { text: "¿Es verdad que el beso más memorable de tu vida fue con alguien inesperado?", diff: "media", system: true },
+    { text: "¿Es verdad que hay alguien aquí con quien tienes química pero finges que no?", diff: "fuerte", system: true },
+    { text: "¿Te besarías con alguien de esta sala si nadie lo supiera después?", diff: "fuerte", system: true },
+    { text: "¿Te gusta más de lo que admites alguien que está aquí ahora mismo?", diff: "fuerte", system: true },
+    { text: "¿Te besarías con la persona que tienes sentada enfrente?", diff: "fuerte", system: true },
+    { text: "¿Te gusta alguien de aquí lo suficiente como para darle tu número esta noche?", diff: "fuerte", system: true },
+    { text: "¿Te gusta alguien de aquí a quien definitivamente no deberías gustarle?", diff: "fuerte", system: true },
+    { text: "¿Hay alguien aquí cuya voz te pone nervioso/a de una forma que no puedes explicar?", diff: "media", system: true },
+    { text: "¿Hay alguien en esta sala cuyo olor te ha llamado la atención esta noche?", diff: "media", system: true },
+    { text: "¿Te gusta alguien de aquí y ya has imaginado cómo sería una cita con esa persona?", diff: "fuerte", system: true },
+    { text: "¿Hay alguien aquí que te gustaría que te invitara a algo esta misma semana?", diff: "media", system: true },
+    { text: "¿Te gustaría que alguien de esta sala te mandara un mensaje esta noche?", diff: "media", system: true },
+    { text: "¿Es verdad que hay una canción que te pone en modo de seducción automática?", diff: "suave", system: true },
+    { text: "¿Es verdad que has usado una excusa ridícula para acercarte a alguien que te gustaba?", diff: "media", system: true },
+    { text: "¿Es verdad que alguna vez has coqueteado con alguien por error y luego no supiste cómo salir?", diff: "media", system: true },
+    { text: "¿Es verdad que alguna vez has dejado a alguien en visto a propósito para parecer más interesante?", diff: "suave", system: true },
+    { text: "¿Es verdad que llevas más tiempo del que admites sin que alguien te bese de verdad?", diff: "fuerte", system: true },
+    { text: "¿Es verdad que tu historial de búsqueda revelaría más cosas de ti de lo que quisieras?", diff: "media", system: true },
+    { text: "¿Es verdad que has mandado un mensaje comprometedor a la persona equivocada?", diff: "media", system: true },
+    { text: "¿Es verdad que alguna vez has fingido que no te gustaba alguien delante de sus amigos?", diff: "media", system: true },
+    { text: "¿Es verdad que tu mejor actuación de indiferencia ha sido con alguien de esta sala?", diff: "fuerte", system: true },
+    { text: "¿Es verdad que hay alguien aquí cuya foto has mirado más de una vez en redes sociales esta semana?", diff: "fuerte", system: true },
+    { text: "¿Es verdad que tu crush actual no sabe que existe para ti de esa manera?", diff: "media", system: true },
+    { text: "¿Es verdad que alguna vez has hecho algo para llamar la atención de alguien que ni se dio cuenta?", diff: "media", system: true },
+    { text: "¿Es verdad que el peor beso de tu vida fue con alguien que te gustaba mucho?", diff: "media", system: true },
+    { text: "¿Es verdad que has bloqueado a alguien por miedo a lo que podrías hacer si seguías hablando?", diff: "fuerte", system: true },
+    { text: "¿Es verdad que tienes un ritual antes de una cita que nunca confesarías?", diff: "media", system: true },
+    { text: "¿Es verdad que alguna vez has reeleído una conversación tuya con alguien de aquí?", diff: "fuerte", system: true },
+    { text: "¿Es verdad que si alguien de esta sala te pidiera bailar ahora mismo, aceptarías sin dudarlo?", diff: "media", system: true },
+    { text: "¿Es verdad que has practicado frente al espejo cómo reaccionar si alguien te besaba?", diff: "media", system: true },
+    { text: "¿Es verdad que hay alguien aquí a quien le has dado un cumplido mental que nunca has dicho en voz alta?", diff: "media", system: true },
+    { text: "¿Es verdad que tu forma de flirtear es tan sutil que la otra persona casi nunca se da cuenta?", diff: "suave", system: true },
+    { text: "¿Es verdad que alguna vez has inventado un plan para coincidir a solas con alguien que te gustaba?", diff: "media", system: true },
+    { text: "¿Es verdad que hay alguien aquí a quien le robarías el teléfono solo para ver con quién habla?", diff: "media", system: true },
+    { text: "¿Es verdad que si pudieras leer la mente de alguien de esta sala, ya sabes de quién sería?", diff: "media", system: true },
+    { text: "¿Es verdad que alguna vez has usado celos para que alguien te prestara más atención?", diff: "media", system: true },
+    { text: "¿Es verdad que hay alguien en esta sala con quien te imaginas despertarte y no te parece tan descabellado?", diff: "fuerte", system: true },
+    { text: "¿Es verdad que la persona que más te atrae esta noche no es la que todo el mundo esperaría?", diff: "fuerte", system: true },
+    { text: "¿Es verdad que alguna vez has fingido que no sabías algo para que alguien te lo explicara y estar más cerca?", diff: "suave", system: true },
+    { text: "¿Es verdad que si alguien de esta sala te escribiera 'necesito hablar contigo' a las 2am, irías?", diff: "fuerte", system: true },
+    { text: "¿Es verdad que hay alguien aquí a quien le harías la vida muy interesante si te lo permitiera?", diff: "fuerte", system: true },
+    { text: "¿Es verdad que alguna vez has borrado mensajes de tu teléfono antes de enseñárselo a alguien?", diff: "media", system: true },
+    { text: "¿Es verdad que has tenido mariposas en el estómago al menos una vez esta noche?", diff: "media", system: true },
+    { text: "¿Es verdad que hay alguien en esta sala a quien le cambiarías el estado civil si pudieras?", diff: "fuerte", system: true },
+    { text: "¿Es verdad que tu mayor red flag romántica es algo que en realidad disfrutas?", diff: "media", system: true },
+    { text: "¿Es verdad que alguna vez has flirteado en un idioma distinto al tuyo para parecer más misterioso/a?", diff: "suave", system: true },
+    { text: "¿Es verdad que la última vez que te ilusionaste de verdad con alguien acabó de la peor forma posible?", diff: "media", system: true },
+    { text: "¿Es verdad que hay alguien aquí a quien le has dicho 'somos solo amigos' pero no te lo acabas de creer?", diff: "fuerte", system: true },
+    { text: "¿Es verdad que si tuvieras que elegir a alguien de esta sala para un viaje de fin de semana, ya sabes quién sería?", diff: "media", system: true },
+    { text: "¿Es verdad que esta noche has sonreído por algo que alguien de aquí ha hecho sin que esa persona lo notara?", diff: "media", system: true },
+    { text: "¿Es verdad que hay alguien en esta sala a quien podrías enamorar si realmente lo intentaras?", diff: "fuerte", system: true },
+    { text: "¿Quién te gusta en secreto ahora mismo?", diff: "extremo", system: true },
+    { text: "¿Alguna vez has stalkeado mucho a alguien en redes? ¿A quién?", diff: "extremo", system: true },
+    { text: "¿Cuál fue tu peor cita?", diff: "extremo", system: true },
+    { text: "¿Has besado a alguien de este grupo? Si no, ¿a quién besarías?", diff: "extremo", system: true },
+    { text: "¿Cuál es la cosa más atrevida que has hecho para llamar la atención de alguien que te gustaba?", diff: "extremo", system: true },
+    { text: "¿Hay alguien aquí con quien hayas tenido tensión romántica pero nunca lo hayáis reconocido?", diff: "extremo", system: true },
+    { text: "¿Cuál es el secreto más gordo que le guardas a tu mejor amigo/a?", diff: "extremo", system: true },
+    { text: "¿Qué es lo más turbio que has hecho por alguien que te gustaba?", diff: "extremo", system: true },
+    { text: "¿Alguna vez has tenido sentimientos por alguien que tenía pareja? ¿Quién era?", diff: "extremo", system: true },
+    { text: "¿Cuál es la mentira más grande que has dicho esta semana y a quién?", diff: "extremo", system: true },
+    { text: "¿Cuál es la mentira más grande que has dicho?", diff: "media", system: true },
+    { text: "¿Cuál es tu mayor vergüenza en público?", diff: "media", system: true },
+    { text: "¿Qué es lo más infantil que todavía haces?", diff: "suave", system: true },
+    { text: "¿Alguna vez has copiado en un examen?", diff: "suave", system: true },
+    { text: "¿Cuál es el secreto que nunca le contaste a tus padres?", diff: "fuerte", system: true },
+    { text: "Si pudieras cambiar algo de tu vida, ¿qué sería?", diff: "media", system: true },
+    { text: "¿Cuál es la cosa más absurda por la que has llorado?", diff: "suave", system: true },
+    { text: "¿Alguna vez has actuado como si te gustara algo solo para encajar?", diff: "suave", system: true },
+    { text: "¿Cuál es el peor consejo que le has dado a alguien?", diff: "suave", system: true },
+    { text: "¿A qué le tienes más miedo de lo que admites?", diff: "suave", system: true },
+    { text: "¿Cuántas veces has fingido estar ocupado para no contestar a alguien?", diff: "media", system: true },
+    { text: "¿Cuál es la cosa más egoísta que has hecho?", diff: "media", system: true },
+    { text: "¿Has dicho alguna vez 'te quiero' sin sentirlo de verdad?", diff: "media", system: true },
+    { text: "¿Cuál es el chisme más gordo que sabes y no has contado?", diff: "media", system: true },
+    { text: "¿Alguna vez has dejado a alguien en visto a propósito durante días?", diff: "media", system: true },
+    { text: "¿Hay alguien del grupo a quien hayas juzgado injustamente al principio?", diff: "fuerte", system: true },
+    { text: "¿Cuál es la decisión de la que más te arrepientes hasta ahora?", diff: "fuerte", system: true },
+    { text: "¿Has fingido alguna vez sentir algo por alguien que no te gustaba?", diff: "fuerte", system: true },
+    { text: "¿Cuál es la cosa más cruel que le has dicho a alguien y nunca te has disculpado?", diff: "fuerte", system: true },
+    { text: "¿Hay algo que hayas hecho y que si se supiera cambiaría la imagen que tienen de ti?", diff: "fuerte", system: true },
+    { text: "¿A quién del grupo le has mentido más, aunque sea en cosas pequeñas?", diff: "fuerte", system: true },
+    { text: "¿Alguna vez has querido que una relación de alguien cercano fracasara?", diff: "fuerte", system: true },
+    { text: "¿Cuál es la vez que más has decepcionado a alguien que te importaba?", diff: "fuerte", system: true },
+    { text: "¿Has usado alguna vez los sentimientos de alguien para conseguir algo?", diff: "fuerte", system: true },
+    { text: "¿Cuál es la conversación que llevas tiempo aplazando con alguien de este grupo?", diff: "fuerte", system: true },
+    { text: "¿Hay alguien aquí con quien hayas fantaseado con tener una conversación que nunca has tenido?", diff: "extremo", system: true },
+    { text: "¿Cuál es la verdad incómoda sobre ti mismo/a que más te cuesta admitir?", diff: "extremo", system: true },
+    { text: "¿Alguna vez has sentido que alguien de este grupo te gusta más de lo que deberías?", diff: "extremo", system: true },
+    { text: "¿Qué es lo que más desearías que alguien del grupo supiera sobre ti sin tener que decírselo?", diff: "extremo", system: true },
+    { text: "¿Cuál es el momento exacto en que te diste cuenta de que alguien te importaba de más?", diff: "extremo", system: true },
+    { text: "¿Hay algo que hayas hecho específicamente pensando en alguien del grupo sin que lo sepa?", diff: "extremo", system: true },
+  ],
+  dare: [
+    { text: "Imita a alguien del grupo durante 30 segundos sin decir quién es.", diff: "suave", system: true },
+    { text: "Llama a alguien de tus contactos y dile que llevas días pensando en él/ella.", diff: "fuerte", system: true },
+    { text: "Haz 10 sentadillas cantando tu canción favorita.", diff: "suave", system: true },
+    { text: "Escribe un mensaje tierno a tu ex. Debes enviarlo.", diff: "fuerte", system: true, noPhone: true },
+    { text: "Habla con acento de otro país durante los próximos 3 turnos.", diff: "suave", system: true },
+    { text: "Deja que el grupo revise tus últimas 10 fotos del móvil.", diff: "media", system: true, noPhone: true },
+    { text: "Baila sin música durante 1 minuto manteniendo contacto visual con alguien.", diff: "media", system: true },
+    { text: "Publica una foto ridícula tuya en tus redes ahora mismo.", diff: "fuerte", system: true, noPhone: true },
+    { text: "Come algo que mezcle 3 ingredientes que elija el grupo.", diff: "media", system: true },
+    { text: "Recita un poema de amor improvisado a la persona de tu derecha/izquierda.", diff: "media", system: true },
+    { text: "Haz que el grupo elija tu foto de perfil durante las próximas 24h.", diff: "fuerte", system: true, noPhone: true },
+    { text: "Imita el sonido de 5 animales distintos en menos de 20 segundos.", diff: "suave", system: true },
+    { text: "Deja que alguien del grupo escriba un estado en tu WhatsApp.", diff: "media", system: true, noPhone: true },
+    { text: "Haz una reverencia exagerada a cada persona del grupo.", diff: "suave", system: true },
+    { text: "Habla sin usar la letra 'A' durante el próximo turno completo.", diff: "media", system: true },
+    { text: "Deja que el grupo te ponga un apodo y úsalo el resto de la noche.", diff: "suave", system: true },
+    { text: "Canta el estribillo de la última canción que escuchaste.", diff: "suave", system: true },
+    { text: "Escribe un tweet comprometedor sobre ti mismo y muéstralo al grupo.", diff: "media", system: true },
+    // nuevos
+    { text: "Envía un emoji insinuante a alguien al azar.", diff: "media", system: true },
+    { text: "Haz una confesión incómoda ahora mismo.", diff: "media", system: true },
+    { text: "Mira fijamente a alguien 10 segundos sin reírte.", diff: "suave", system: true },
+    { text: "Imita tu mejor intento de seducción.", diff: "media", system: true },
+    { text: "Cuenta tu peor momento romántico.", diff: "media", system: true },
+    { text: "Susurra algo atrevido al oído de la persona a tu derecha/izquierda.", diff: "fuerte", system: true },
+    { text: "Deja que alguien del grupo revise tus últimos 5 mensajes.", diff: "fuerte", system: true, noPhone: true },
+    { text: "Haz 10 flexiones de forma 'sexy'.", diff: "media", system: true },
+    { text: "Describe con mímica, sin hablar, cómo crees que besa la persona a tu derecha/izquierda.", diff: "media", system: true },
+    { text: "Deja que alguien del grupo te escriba algo en la piel con un dedo.", diff: "fuerte", system: true },
+    { text: "Pon tu cabeza en el regazo de alguien durante 30 segundos.", diff: "fuerte", system: true },
+    { text: "Haz tu mejor cara de 'te estoy seduciendo' mirando a los ojos a alguien.", diff: "media", system: true },
+    { text: "Deja que el grupo decida quién te da un masaje de 20 segundos en los hombros.", diff: "fuerte", system: true },
+    { text: "Confiesa en voz alta a quién de la sala le darías un beso ahora mismo.", diff: "fuerte", system: true },
+    { text: "Acércate a alguien al oído y dile lo que más te gusta de él/ella físicamente.", diff: "fuerte", system: true },
+    { text: "Dale un beso en la mejilla a la persona que más te guste de la sala.", diff: "fuerte", system: true },
+    { text: "Acaricia el pelo de la persona a tu derecha/izquierda durante 20 segundos.", diff: "fuerte", system: true },
+    { text: "Muerde tu labio inferior mientras miras fijamente a alguien del grupo durante 15 segundos.", diff: "media", system: true },
+    { text: "Acerca tu cara a la de alguien hasta que vuestras narices casi se toquen, y mantén la posición 10 segundos.", diff: "fuerte", system: true },
+    { text: "Di en voz alta cuál es tu 'tipo' y señala a quien más se acerque en la sala.", diff: "fuerte", system: true },
+    { text: "Describe con detalle, sin nombrarle, cómo besarías a alguien de aquí.", diff: "fuerte", system: true },
+    { text: "Manda un audio de voz susurrando algo sugerente a quien elijas del grupo.", diff: "fuerte", system: true },
+    { text: "Di en voz alta una cosa que harías si estuvieras a solas con la persona a tu derecha/izquierda.", diff: "fuerte", system: true },
+    { text: "Deja que el grupo te haga 3 preguntas de sí o no sobre tu vida amorosa y responde con total honestidad.", diff: "media", system: true },
+    { text: "Di el nombre de alguien de la sala a quien le mandarías un mensaje si fuera la última noche del mundo.", diff: "fuerte", system: true },
+    { text: "Susurra a alguien del grupo lo que cambiarías de vuestra primera conversación si pudieras repetirla.", diff: "media", system: true },
+    { text: "El grupo vota: ¿con quién de la sala formarías la pareja más explosiva? Acepta el veredicto.", diff: "media", system: true },
+    { text: "Deja que alguien del grupo desbloquee tu teléfono y ponga el fondo de pantalla que quiera.", diff: "media", system: true, noPhone: true },
+    { text: "Haz un roleplay de 30 segundos: eres alguien que está intentando ligar contigo mismo/a.", diff: "media", system: true },
+    { text: "Escribe con el dedo en la espalda de alguien una palabra; esa persona tiene que adivinarla.", diff: "media", system: true },
+    { text: "Haz tu mejor beso al aire dirigido a alguien del grupo mientras le miras a los ojos.", diff: "media", system: true },
+    { text: "El grupo elige a dos personas; deben mirarse a los ojos sin parpadear el máximo tiempo posible.", diff: "media", system: true },
+    { text: "Toca el brazo de alguien muy despacio de muñeca a hombro mientras cuentas hasta diez en voz alta.", diff: "fuerte", system: true },
+    { text: "Abraza a la persona que más te guste.", diff: "media", system: true },
+    { text: "Elige a alguien del grupo y dile en voz alta la primera palabra que se te viene a la cabeza cuando piensas en él/ella.", diff: "media", system: true },
+    { text: "Haz durante 20 segundos tu mejor actuación de alguien que está intentando ligar sin decir ni una palabra.", diff: "suave", system: true },
+    { text: "Deja que alguien del grupo elija una foto tuya del teléfono y la muestre a todos.", diff: "media", system: true, noPhone: true },
+    { text: "Susurra al oído de la persona a tu derecha/izquierda algo que te gustaría que te dijeran a ti.", diff: "fuerte", system: true },
+    { text: "Pon tu mano en la cara de alguien y acaríciala suavemente durante 10 segundos mirándole a los ojos.", diff: "fuerte", system: true },
+    { text: "Imita a la persona del grupo que crees que flirtea mejor sin decir quién es; el grupo adivina.", diff: "suave", system: true },
+    { text: "Di tres cosas que te gustan físicamente de la persona que tienes enfrente, sin filtros.", diff: "fuerte", system: true },
+    { text: "Deja que alguien del grupo te peine o arregle el pelo como quiera.", diff: "suave", system: true },
+    { text: "Cuenta en 30 segundos la historia de tu ligue más ridículo de la forma más dramática posible.", diff: "media", system: true },
+    { text: "Manda un mensaje de texto a la última persona con la que ligaste diciendo solo 'hola, estaba pensando en ti'.", diff: "fuerte", system: true, noPhone: true },
+    { text: "Deja que el grupo elija a alguien y tenéis que bailar juntos durante una canción entera.", diff: "media", system: true },
+    { text: "Haz tu mejor voz seductora diciendo una frase mundana como 'me pones otro vaso de agua, por favor'.", diff: "suave", system: true },
+    { text: "Cierra los ojos; alguien del grupo te toca la mano suavemente y tienes que adivinar quién es.", diff: "media", system: true },
+    { text: "Confiesa cuál es la mentira más piadosa que le has dicho a alguien para no herirle en el plano romántico.", diff: "media", system: true },
+    { text: "Elige a alguien del grupo y descríbele en tres palabras como si fuera el personaje de una novela romántica.", diff: "suave", system: true },
+    { text: "Deja que alguien te dibuje algo pequeño en la muñeca con un bolígrafo.", diff: "suave", system: true },
+    { text: "Haz el gesto más coqueto que sepas sin usar las palabras mientras alguien del grupo cuenta hasta 15.", diff: "suave", system: true },
+    { text: "Toma la mano de la persona a tu derecha/izquierda, cierra los ojos y quédate así en silencio durante 20 segundos.", diff: "fuerte", system: true },
+    { text: "El grupo vota quién tiene la mirada más seductora; esa persona tiene que demostrarlo mirando a alguien fijamente.", diff: "media", system: true },
+    { text: "Describe cómo sería tu noche perfecta con alguien sin mencionar ningún lugar concreto ni nombre.", diff: "media", system: true },
+    { text: "Elige a dos personas del grupo y diles cuál de las dos te parece más peligrosa en el sentido romántico y por qué.", diff: "fuerte", system: true },
+    { text: "Deja que alguien del grupo te cambie el tono de pantalla por uno que él/ella elija y no puedes cambiarlo hasta mañana.", diff: "media", system: true, noPhone: true },
+    { text: "Levántate, camina hasta la persona que más te guste de la sala y dile algo al oído que solo escuche ella.", diff: "fuerte", system: true },
+    { text: "Haz durante 15 segundos una mirada de 'te lo explicaré luego' a alguien del grupo sin romper el contacto visual.", diff: "suave", system: true },
+    { text: "Confiesa si en este momento hay alguien en la sala con quien te irías ahora mismo si te lo pidiera.", diff: "fuerte", system: true },
+    { text: "Deja que alguien del grupo te ponga un mote romántico y tendrás que usarlo durante el resto de la noche.", diff: "suave", system: true },
+    { text: "Coge el teléfono de la persona a tu derecha/izquierda y pon una canción que creas que describe cómo es esa persona.", diff: "media", system: true },
+    { text: "El grupo elige: tienes que decirle en voz alta a alguien lo que pensaste la primera vez que le viste.", diff: "fuerte", system: true },
+    { text: "Haz durante 10 segundos la pose más segura y seductora que puedas mientras el grupo te observa en silencio.", diff: "suave", system: true },
+    { text: "Elige a alguien del grupo y cuéntale en susurros cuál sería el primer plan que le propondrías para una cita.", diff: "fuerte", system: true },
+    { text: "Deja que alguien del grupo te haga una pregunta que normalmente nunca responderías y esta vez tienes que ser sincero/a.", diff: "fuerte", system: true },
+    { text: "Di en voz alta el nombre de la persona de esta sala con quien crees que tendrías la conversación más interesante a las 3 de la madrugada.", diff: "media", system: true },
+    { text: "Pon tu cabeza sobre el hombro de la persona a tu derecha/izquierda y quédate así hasta el siguiente turno.", diff: "media", system: true },
+    { text: "Haz una reverencia exagerada ante la persona que más admires en este momento dentro del grupo.", diff: "suave", system: true },
+    { text: "Coge la mano de alguien del grupo y léele la palma inventándote el futuro romántico más dramático que se te ocurra.", diff: "media", system: true },
+    { text: "Elige a alguien del grupo y dile, mirándole a los ojos, la frase más honesta que puedas decirle esta noche.", diff: "fuerte", system: true },
+    { text: "Elige a dos personas del grupo y caminad juntos de un lado a otro de la habitación del brazo sin deciros nada.", diff: "media", system: true },
+    { text: "Di en voz alta a qué personaje de película o serie romántica le daría al alguien de esta sala si tuvieras que elegir.", diff: "suave", system: true },
+    { text: "Come algo con los ojos cerrados que te den los demás.", diff: "extremo", system: true },
+    { text: "Di en voz alta quién de este grupo te parece más atractivo/a y por qué.", diff: "extremo", system: true },
+    { text: "Imita a alguien del grupo hasta que adivinen quién es. Si no lo adivinan en 30 segundos, repite.", diff: "extremo", system: true },
+    { text: "Cuenta en detalle tu crush más reciente: quién es, cuándo fue y qué pasó.", diff: "extremo", system: true },
+    { text: "El grupo te hace una pregunta personal que tienes que responder con total sinceridad.", diff: "extremo", system: true },
+    { text: "Di algo sincero y sin filtro sobre cada persona del grupo, una por una.", diff: "extremo", system: true },
+    { text: "Confiesa algo que nunca le has dicho a nadie de este grupo.", diff: "extremo", system: true },
+    { text: "Pon la cara más seductora que puedas y aguanta 10 segundos mirando a los ojos de alguien a quien el grupo elija.", diff: "extremo", system: true },
+    { text: "Di el nombre completo de la última persona con la que tuviste mariposas en el estómago.", diff: "extremo", system: true },
+    { text: "El grupo tiene 3 intentos para adivinar quién te gusta. Si aciertan, tienes que confirmarlo.", diff: "extremo", system: true },
+    { text: "Envía un emoji extraño a la tercera persona de tu WhatsApp.", diff: "media", system: true, noPhone: true },
+    { text: "Deja que alguien del grupo publique algo en tu historia.", diff: "fuerte", system: true },
+    { text: "Haz una cara graciosa y mantenla 30 segundos.", diff: "suave", system: true },
+    { text: "Di un trabalenguas 3 veces rápido.", diff: "suave", system: true },
+    { text: "Haz la mejor imitación de un profesor o jefe durante 30 segundos.", diff: "suave", system: true },
+    { text: "Di el nombre de cada persona del grupo con un adjetivo que empiece por la misma letra.", diff: "suave", system: true },
+    { text: "Cuenta un chiste. Si nadie se ríe, cuenta otro.", diff: "suave", system: true },
+    { text: "Describe a alguien del grupo con tres emojis sin usar palabras y que el grupo adivine quién es.", diff: "suave", system: true },
+    { text: "Habla durante 30 segundos sobre tu tema favorito sin parar.", diff: "media", system: true },
+    { text: "Deja que el grupo te escriba una frase en el brazo con rotulador.", diff: "media", system: true },
+    { text: "Haz una declaración dramática de amor a una persona imaginaria durante 20 segundos.", diff: "media", system: true },
+    { text: "Imita a la última persona con la que tuviste una conversación incómoda.", diff: "media", system: true },
+    { text: "Deja que alguien del grupo cambie tu nombre de contacto en el móvil de otra persona.", diff: "media", system: true, noPhone: true },
+    { text: "Cuéntale al grupo tu tipo ideal con todo detalle. Sin filtros.", diff: "fuerte", system: true },
+    { text: "Di en voz alta algo que llevas tiempo queriendo decirle a alguien del grupo.", diff: "fuerte", system: true },
+    { text: "Imita a la persona del grupo que más te parece que tiene drama en su vida amorosa.", diff: "fuerte", system: true },
+    { text: "El grupo te hace tres preguntas personales que tienes que responder sin mentir.", diff: "fuerte", system: true },
+    { text: "Describe sin nombrarle cómo es físicamente la persona que te parece más atractiva del grupo.", diff: "fuerte", system: true },
+    { text: "Escribe en un papel quién te parece más y menos atractivo del grupo. El grupo decide si lo lees en voz alta.", diff: "fuerte", system: true },
+    { text: "Llama a alguien que no está aquí y dile que tienes algo importante que contarle. Luego invéntate algo tonto.", diff: "fuerte", system: true, noPhone: true },
+    { text: "Cuenta en voz alta el momento más vergonzoso de tu vida amorosa con todos los detalles.", diff: "fuerte", system: true },
+    { text: "Deja que el grupo vote quién te hace el reto más incómodo. Tienes que aceptarlo.", diff: "fuerte", system: true },
+    { text: "Confiesa algo que hayas pensado sobre alguien del grupo que nunca te hayas atrevido a decir.", diff: "fuerte", system: true },
+    { text: "Escribe en papel el nombre de la persona del grupo con la que tendrías más tensión en una película romántica. Se lee en voz alta.", diff: "extremo", system: true },
+    { text: "Mira a los ojos a la persona del grupo que más te altera y dile algo que normalmente no dirías.", diff: "extremo", system: true },
+    { text: "El grupo elige a dos personas. Tienes que decir cuál de las dos te gustaría besar y por qué.", diff: "extremo", system: true },
+    { text: "Di el nombre de la persona de este grupo con la que más química sientes, aunque no quieras reconocerlo.", diff: "extremo", system: true },
+    { text: "Confiesa algo que hayas hecho o sentido respecto a alguien del grupo que nunca pensaste que saldrías a la luz.", diff: "extremo", system: true },
+    { text: "El grupo tiene 60 segundos para hacerte todas las preguntas que quieran. Tienes que responderlas todas.", diff: "extremo", system: true },
+  ],
+  nunca: [
+    { text: "Yo nunca he llorado con una película delante de alguien.", diff: "suave" },
+    { text: "Yo nunca he fingido que me gustaba algo que me regalaron.", diff: "suave" },
+    { text: "Yo nunca he hecho el muerto cuando alguien me llamaba.", diff: "suave" },
+    { text: "Yo nunca he dicho que estaba de camino cuando ni había salido de casa.", diff: "suave" },
+    { text: "Yo nunca he ensayado una conversación antes de tenerla.", diff: "suave" },
+    { text: "Yo nunca he hecho como que no veía a alguien conocido para no saludar.", diff: "suave" },
+    { text: "Yo nunca he cantado a pleno pulmón en un sitio público.", diff: "suave" },
+    { text: "Yo nunca he comido algo del suelo aplicando la regla de los 5 segundos.", diff: "suave" },
+    { text: "Yo nunca he tenido un crush con alguien del grupo.", diff: "media" },
+    { text: "Yo nunca he mandado un mensaje a la persona equivocada y me he arrepentido.", diff: "media" },
+    { text: "Yo nunca he cotilleado a alguien de este grupo con otra persona.", diff: "media" },
+    { text: "Yo nunca he fingido que dormía para no tener que hablar con alguien.", diff: "media" },
+    { text: "Yo nunca he bloqueado a alguien y luego desbloqueado para ver su perfil.", diff: "media" },
+    { text: "Yo nunca he dicho que estaba bien cuando en realidad no lo estaba.", diff: "media" },
+    { text: "Yo nunca he hecho algo estúpido para llamar la atención de alguien que me gustaba.", diff: "media" },
+    { text: "Yo nunca he stalkeado las fotos de alguien hasta llegar al año 2018.", diff: "media" },
+    { text: "Yo nunca he tenido una conversación con alguien de este grupo que no le he contado a nadie más.", diff: "fuerte" },
+    { text: "Yo nunca he sentido celos de alguien de este grupo.", diff: "fuerte" },
+    { text: "Yo nunca he tenido un sueño romántico con alguien que no esperaba.", diff: "fuerte" },
+    { text: "Yo nunca he hecho algo que sabía que estaba mal solo para impresionar a alguien.", diff: "fuerte" },
+    { text: "Yo nunca he guardado sentimientos por alguien durante más de 6 meses sin decírselo.", diff: "fuerte" },
+    { text: "Yo nunca he mandado un mensaje en broma esperando que la otra persona lo tomara en serio.", diff: "fuerte" },
+    { text: "Yo nunca he mentido sobre dónde estaba o con quién.", diff: "fuerte" },
+    { text: "Yo nunca he besado a alguien que le gustaba a un amigo o amiga.", diff: "fuerte" },
+    { text: "Yo nunca he tenido sentimientos por alguien que está en esta habitación ahora mismo.", diff: "extremo" },
+    { text: "Yo nunca he estado a punto de decirle algo importante a alguien y me he echado atrás.", diff: "extremo" },
+    { text: "Yo nunca he hecho algo de lo que me arrepiento profundamente con alguien del grupo.", diff: "extremo" },
+    { text: "Yo nunca he querido que alguien de aquí me pidiera algo que no me ha pedido nunca.", diff: "extremo" },
+    { text: "Yo nunca he fingido no tener sentimientos cuando claramente los tenía.", diff: "extremo" },
+    { text: "Yo nunca he fantasiado con una situación que involucra a alguien de este grupo.", diff: "extremo" },
+  ],
+  probable: [
+    { text: "¿Quién es más probable que se ría en el peor momento posible?", diff: "suave" },
+    { text: "¿Quién es más probable que se pierda yendo a un sitio que ya conoce?", diff: "suave" },
+    { text: "¿Quién es más probable que llore viendo una película de animación?", diff: "suave" },
+    { text: "¿Quién es más probable que llegue tarde a su propia boda?", diff: "suave" },
+    { text: "¿Quién es más probable que se quede dormido en clase o en el trabajo?", diff: "suave" },
+    { text: "¿Quién es más probable que se coma lo que hay en la nevera de otro sin permiso?", diff: "suave" },
+    { text: "¿Quién es más probable que mande un mensaje en el grupo equivocado?", diff: "media" },
+    { text: "¿Quién es más probable que stalkee a su ex esta semana?", diff: "media" },
+    { text: "¿Quién es más probable que mienta para evitar un plan?", diff: "media" },
+    { text: "¿Quién es más probable que le guste alguien y no lo diga nunca?", diff: "media" },
+    { text: "¿Quién es más probable que lleve una doble vida sin que nadie se entere?", diff: "media" },
+    { text: "¿Quién es más probable que tenga el móvil lleno de fotos de alguien que le gusta?", diff: "media" },
+    { text: "¿Quién es más probable que se haya enamorado de alguien de este grupo?", diff: "fuerte" },
+    { text: "¿Quién es más probable que haya flirteado con alguien del grupo sin reconocerlo?", diff: "fuerte" },
+    { text: "¿Quién es más probable que tenga un secreto que cambiaría cómo lo/la veis?", diff: "fuerte" },
+    { text: "¿Quién es más probable que haya hablado mal de alguien de aquí a sus espaldas?", diff: "fuerte" },
+    { text: "¿Quién es más probable que acabe con alguien inesperado del grupo?", diff: "fuerte" },
+    { text: "¿Quién es más probable que se lance primero si alguien le gusta de verdad?", diff: "fuerte" },
+    { text: "¿Quién es más probable que haya llorado por alguien que no lo merece?", diff: "fuerte" },
+    { text: "¿Quién es más probable que haya tenido un sueño romántico con alguien de aquí?", diff: "fuerte" },
+    { text: "¿Quién es más probable que lleve más tiempo con un crush sin haber hecho nada?", diff: "fuerte" },
+    { text: "¿Quién es más probable que tenga el ego más frágil del grupo aunque aparente lo contrario?", diff: "fuerte" },
+    { text: "¿Quién es más probable que haya guardado sentimientos por alguien de este grupo?", diff: "fuerte" },
+    { text: "¿Quién es más probable que haya mentido sobre sus sentimientos en una conversación importante?", diff: "fuerte" },
+    { text: "¿Quién es más probable que besaría a alguien del grupo si hubiera la excusa perfecta?", diff: "extremo" },
+    { text: "¿Quién es más probable que esté pensando en alguien de aquí en este momento?", diff: "extremo" },
+    { text: "¿Quién es más probable que haya sentido algo por más de una persona del grupo a la vez?", diff: "extremo" },
+    { text: "¿Quién es más probable que sepa exactamente a quién le gusta alguien del grupo pero no lo diga?", diff: "extremo" },
+    { text: "¿Quién es más probable que haya imaginado cómo sería estar con alguien de aquí?", diff: "extremo" },
+    { text: "¿Quién es más probable que haya mandado un mensaje que no debía a alguien de este grupo?", diff: "extremo" },
+    { text: "¿Quién es más probable que tenga sentimientos sin resolver por alguien presente?", diff: "extremo" },
+    { text: "¿Quién es más probable que rompa la tensión y confiese algo esta noche?", diff: "extremo" },
+    { text: "¿Quién es más probable que cambie completamente de carácter cuando le gusta alguien?", diff: "extremo" },
+    { text: "¿Quién es más probable que haya hecho algo específicamente para llamar la atención de alguien del grupo?", diff: "extremo" },
+    { text: "¿Quién es más probable que sea el/la más difícil de conquistar de todos?", diff: "extremo" },
+    { text: "¿Quién es más probable que tenga una conversación secreta que el grupo no conoce?", diff: "extremo" },
+    { text: "¿Quién es más probable que caiga primero si alguien del grupo le da un poco de atención?", diff: "extremo" },
+    { text: "¿Quién es más probable que haya estado a punto de decirle algo importante a alguien de aquí y se haya echado atrás?", diff: "extremo" },
+    { text: "¿Quién es más probable que tenga más química con alguien del grupo de lo que admite?", diff: "extremo" },
+    { text: "¿Quién es más probable que acabe llorando esta noche si sigue el juego?", diff: "extremo" },
+  ]
+};
+
+let questions = {
+  truth:    [...SYSTEM_QUESTIONS.truth],
+  dare:     [...SYSTEM_QUESTIONS.dare],
+  nunca:    [...SYSTEM_QUESTIONS.nunca],
+  probable: [...SYSTEM_QUESTIONS.probable]
+};
+
+// ============================================================
+// CLASE — género de cada alumno
+// ============================================================
+const CLASE = {
+  chicas: ["Marcela","Amelia","Sara","Lily","Claudia","Paula","Aitana","Valentina","Luize"],
+  chicos: ["Samuel","Hugo","Yago","Eric","Abel","Daniel","Fernando","Lucas","Andrés","Enrique","Astor","Rodrigo","Beltran","Matteo"]
+};
+
+function normStr(s) {
+  return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+function getGenero(nombre) {
+  if (playerGenders[nombre]) return playerGenders[nombre];
+  const first = normStr(nombre.split(' ')[0]);
+  if (CLASE.chicas.some(n => normStr(n) === first)) return 'chica';
+  if (CLASE.chicos.some(n => normStr(n) === first)) return 'chico';
+  return null;
+}
+
+function getOpuestos(currentPlayer) {
+  const genero = getGenero(currentPlayer);
+  if (!genero) return null;
+  const opuestoGenero = genero === 'chica' ? 'chico' : 'chica';
+  // Del grupo de jugadores activos, filtrar los del género opuesto
+  return players.filter(p => p !== currentPlayer && getGenero(p) === opuestoGenero);
+}
+
+let players = [];
+let playerGenders = {};
+let playerEmojis = {};
+let scores = {};
+let comodines = {};
+let historial = [];
+let timerInterval = null;
+let activeTheme = 'all';
+let gameState = {
+  currentIndex: 0,
+  turns: 0,
+  truths: 0,
+  dares: 0,
+  usedTruth: [],
+  usedDare: [],
+  doubleActive: false
+};
+
+let setupActiveTab = 'truth';
+
+// ============================================================
+// HOT TAKES
+// ============================================================
+const HOT_TAKES = [
+  "¿Quién del grupo sería el peor novio/novia? Justifícate.",
+  "¿Quién del grupo tiene más papeletas de quedarse soltero/a toda la vida?",
+  "¿Quién del grupo flirtea sin darse cuenta de que está flirteando?",
+  "¿Quién del grupo tiene el peor gusto para ligar?",
+  "¿Quién del grupo daría más drama en una relación?",
+  "¿Quién del grupo tiene más ego romántico del que debería?",
+  "¿Quién del grupo caería más rápido si alguien le diera un poco de atención?",
+  "¿Quién del grupo es el más difícil de conquistar y por qué?",
+  "¿Quién del grupo tiene más posibilidades de enamorarse esta noche?",
+  "¿Quién del grupo haría la declaración más torpe de la historia?",
+];
+
+// ============================================================
+// TEMAS
+// ============================================================
+const THEME_TAGS = {
+  crush:     ['crush','gusta','beso','besar','atractiv','cita','flirt','coquet','químic','enamorar','seduci','ligar'],
+  verguenza: ['vergüenza','vergonzoso','metedura','ridículo','incómodo','peor momento'],
+  secretos:  ['secreto','mentira','cotilleo','nunca has','confesa','oculta','nadie sabe','privado'],
+  hottakes:  ['quién del grupo'],
+};
+
+function matchesTheme(q, theme) {
+  if (theme === 'all') return true;
+  if (theme === 'hottakes') return q.isHotTake === true;
+  const tags = THEME_TAGS[theme] || [];
+  return tags.some(t => q.text.toLowerCase().includes(t));
+}
+
+function setTheme(theme, btn) {
+  activeTheme = theme;
+  document.querySelectorAll('.theme-pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (theme === 'hottakes') ensureHotTakes();
+  renderSetupQList();
+}
+
+function ensureHotTakes() {
+  HOT_TAKES.forEach(text => {
+    if (!questions.truth.some(q => q.text === text)) {
+      questions.truth.push({ text, diff: 'fuerte', system: false, isHotTake: true });
+    }
+  });
+}
+
+// ============================================================
+// EMOJI PICKER
+// ============================================================
+const EMOJIS = ['😀','😎','🥳','😈','🤩','🫦','🔥','💀','👻','🐺','🦁','🐯','🦊','🐸','🤖','👽','🦄','🐲','⚡','💎','🌙','🍒','🎯','🎲'];
+let emojiPickerTarget = null;
+
+function openEmojiPicker(playerName, anchorEl) {
+  emojiPickerTarget = playerName;
+  const picker = document.getElementById('emojiPicker');
+  picker.innerHTML = EMOJIS.map(e =>
+    `<div class="emoji-opt" onclick="selectEmoji('${e}')">${e}</div>`
+  ).join('');
+  const rect = anchorEl.getBoundingClientRect();
+  picker.style.top = (rect.bottom + 6) + 'px';
+  picker.style.left = Math.max(8, rect.left - 40) + 'px';
+  picker.classList.remove('hidden');
+  setTimeout(() => document.addEventListener('click', closePicker, { once: true }), 10);
+}
+
+function selectEmoji(emoji) {
+  if (!emojiPickerTarget) return;
+  playerEmojis[emojiPickerTarget] = emoji;
+  emojiPickerTarget = null;
+  document.getElementById('emojiPicker').classList.add('hidden');
+  renderPlayers();
+}
+
+function closePicker() {
+  document.getElementById('emojiPicker').classList.add('hidden');
+}
+
+// ============================================================
+// HISTORIAL
+// ============================================================
+function addToHistorial(player, type, text) {
+  historial.push({ player, type, text, turn: gameState.turns });
+}
+
+function openHistorial() {
+  const list = document.getElementById('historialList');
+  if (historial.length === 0) {
+    list.innerHTML = '<div class="empty-state">Aún no hay turnos jugados</div>';
+  } else {
+    list.innerHTML = [...historial].reverse().map(h => `
+      <div class="historial-item">
+        <span class="hist-player">${h.player.split(' ')[0]}</span>
+        <span class="hist-type hist-${h.type}">${h.type === 'truth' ? '💬' : h.type === 'dare' ? '🔥' : h.type === 'nunca' ? '🙅' : h.type === 'probable' ? '🤔' : '💘'} ${h.type}</span>
+        <span style="flex:1;color:var(--muted)">${h.text}</span>
+      </div>
+    `).join('');
+  }
+  document.getElementById('historialOverlay').classList.remove('hidden');
+}
+
+function closeHistorial(e) {
+  if (e.target === document.getElementById('historialOverlay')) {
+    document.getElementById('historialOverlay').classList.add('hidden');
+  }
+}
+
+// ============================================================
+// PLAYERS
+// ============================================================
+const avatarColors = ['av0','av1','av2','av3','av4','av5'];
+
+function addPlayer() {
+  const input = document.getElementById('playerInput');
+  const name = input.value.trim();
+  if (!name) return;
+  if (players.includes(name)) { showToast('¡Ese nombre ya está!'); return; }
+  if (players.length >= 10) { showToast('Máximo 10 jugadores'); return; }
+  players.push(name);
+  input.value = '';
+  renderPlayers();
+  updateStartBtn();
+  input.focus();
+}
+
+function removePlayer(i) {
+  players.splice(i, 1);
+  renderPlayers();
+  updateStartBtn();
+}
+
+function renderPlayers() {
+  const list = document.getElementById('playersList');
+  if (players.length === 0) {
+    list.innerHTML = '<div class="empty-state pulse">Añade al menos 2 jugadores</div>';
+    return;
+  }
+  list.innerHTML = players.map((p, i) => {
+    const emoji = playerEmojis[p] || '😀';
+    return `
+    <div class="player-tag">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div class="avatar-emoji" onclick="openEmojiPicker('${p}', this)" title="Cambiar avatar">${emoji}</div>
+        <span>${p}</span>
+      </div>
+      <button class="remove" onclick="removePlayer(${i})">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function updateStartBtn() {
+  document.getElementById('startBtn').disabled = players.length < 2;
+}
+
+// ============================================================
+// SETUP TABS
+// ============================================================
+function switchSetupTab(type) {
+  setupActiveTab = type;
+  const tT = document.getElementById('setupTabTruth');
+  const tD = document.getElementById('setupTabDare');
+  tT.className = 'q-tab' + (type === 'truth' ? ' active-truth' : '');
+  tD.className = 'q-tab' + (type === 'dare' ? ' active-dare' : '');
+  renderSetupQList();
+}
+
+function getFilteredQuestions(type) {
+  const diff = document.getElementById('difficultyFilter').value;
+  const noPhone = document.getElementById('noPhoneToggle')?.checked;
+  const allowed = diff === 'soloextremo' ? ['extremo'] :
+                  diff === 'extremo' ? ['suave','media','fuerte','extremo'] :
+                  diff === 'all'     ? ['suave','media','fuerte'] :
+                  diff === 'media'   ? ['suave','media'] :
+                  diff === 'fuerte'  ? ['fuerte'] : ['suave'];
+  return questions[type].filter(q =>
+    allowed.includes(q.diff) &&
+    matchesTheme(q, activeTheme) &&
+    !(noPhone && q.noPhone)
+  );
+}
+
+function renderSetupQList() {
+  const list = document.getElementById('setupQList');
+  const qs = getFilteredQuestions(setupActiveTab);
+  const count = document.getElementById('qCount');
+  count.textContent = `${qs.length} pregunta${qs.length !== 1 ? 's' : ''} disponible${qs.length !== 1 ? 's' : ''}`;
+  if (qs.length === 0) {
+    list.innerHTML = '<div class="empty-state">Sin preguntas con este filtro</div>';
+    return;
+  }
+  list.innerHTML = qs.slice(0, 6).map(q => `
+    <div class="q-item"><span>${q.text}</span><small style="color:var(--muted);white-space:nowrap">${diffEmoji(q.diff)}</small></div>
+  `).join('') + (qs.length > 6 ? `<div class="q-item" style="justify-content:center;color:var(--muted)">...y ${qs.length - 6} más</div>` : '');
+}
+
+function diffEmoji(d) {
+  return d === 'suave' ? '🟢' : d === 'media' ? '🟡' : d === 'fuerte' ? '🔴' : '💀';
+}
+
+document.getElementById('difficultyFilter').addEventListener('change', renderSetupQList);
+
+// ============================================================
+// GAME
+// ============================================================
+function startGame() {
+  if (players.length < 2) return;
+  gameState = { currentIndex: 0, turns: 0, truths: 0, dares: 0, usedTruth: [], usedDare: [], doubleActive: false };
+  scores = {};
+  comodines = {};
+  historial = [];
+  players.forEach(p => {
+    scores[p] = { pts: 0, streak: 0 };
+    comodines[p] = { skip: 1, double: 1, group: 1 };
+  });
+  showScreen('game');
+  launchRoulette();
+}
+
+// ============================================================
+// RULETA
+// ============================================================
+function launchRoulette() {
+  const overlay = document.getElementById('rouletteOverlay');
+  const spinning = document.getElementById('rouletteName');
+  const final = document.getElementById('rouletteFinal');
+  const finalName = document.getElementById('rouletteFinalName');
+
+  overlay.classList.remove('hidden');
+  final.style.display = 'none';
+  spinning.style.display = 'block';
+
+  let elapsed = 0;
+  const duration = 2000;
+  const interval = setInterval(() => {
+    spinning.textContent = players[Math.floor(Math.random() * players.length)].split(' ')[0];
+    elapsed += 100;
+    if (elapsed >= duration) {
+      clearInterval(interval);
+      spinning.style.display = 'none';
+      const winner = players[gameState.currentIndex];
+      const winEmoji = playerEmojis[winner] || '🎯';
+      finalName.textContent = winEmoji + ' ' + winner.split(' ')[0];
+      final.style.display = 'block';
+    }
+  }, 100);
+}
+
+function closeRoulette() {
+  document.getElementById('rouletteOverlay').classList.add('hidden');
+  updateGameUI();
+}
+
+// ============================================================
+// GAME UI
+// ============================================================
+function updateGameUI() {
+  const player = players[gameState.currentIndex];
+  const emoji = playerEmojis[player] || '';
+  document.getElementById('currentPlayerName').textContent = (emoji ? emoji + ' ' : '') + player.split(' ')[0];
+  document.getElementById('statTurns').textContent = gameState.turns;
+  document.getElementById('statTruths').textContent = gameState.truths;
+  document.getElementById('statDares').textContent = gameState.dares;
+  document.getElementById('choiceContainer').style.display = 'flex';
+  gameState.doubleActive = false;
+
+  // Shame mode check
+  const shameOn = document.getElementById('shameToggle').checked;
+  const shamePct = parseInt(document.getElementById('shameSlider').value);
+  const isShame = shameOn && gameState.turns > 0 && (Math.random() * 100 < shamePct);
+  const shameBanner = document.getElementById('shameBanner');
+  shameBanner.classList.toggle('visible', isShame);
+  gameState.shameActive = isShame;
+
+  // Pozo btn
+  document.getElementById('pozoBtn').disabled = false;
+
+  // Hide cards
+  document.getElementById('questionCard').className = 'question-card';
+  document.getElementById('pozoCard').className = 'question-card';
+  document.getElementById('genderCard').className = 'question-card';
+  document.getElementById('nuncaCard').className = 'question-card';
+  document.getElementById('probableCard').className = 'question-card';
+
+  // Stop timer
+  stopTimer();
+
+  renderScores();
+  renderComodines(player);
+}
+
+function renderScores() {
+  const bar = document.getElementById('scoresBar');
+  bar.innerHTML = players.map((p) => {
+    const s = scores[p];
+    const emoji = playerEmojis[p] || '😀';
+    const streak = s.streak >= 2 ? `<span class="streak-badge">🔥${s.streak}</span>` : '';
+    return `<div class="score-chip">
+      <span style="font-size:1.1rem;line-height:1">${emoji}</span>
+      <span style="font-size:0.82rem;color:var(--muted)">${p.split(' ')[0]}</span>
+      <span class="score-pts">${s.pts}</span>
+      ${streak}
+    </div>`;
+  }).join('');
+}
+
+function renderComodines(player) {
+  const c = comodines[player];
+  document.getElementById('comodinBar').innerHTML = `
+    <button class="comodin-chip com-skip" onclick="useComodin('skip')" ${c.skip===0?'disabled':''} title="Pasar sin penalización">
+      🛡️ Pase <span style="opacity:.6">(${c.skip})</span>
+    </button>
+    <button class="comodin-chip com-double" onclick="useComodin('double')" ${c.double===0?'disabled':''} title="Doble puntos esta ronda">
+      ⚡ x2 <span style="opacity:.6">(${c.double})</span>
+    </button>
+    <button class="comodin-chip com-group" onclick="useComodin('group')" ${c.group===0?'disabled':''} title="El reto lo hace todo el grupo">
+      👥 Grupo <span style="opacity:.6">(${c.group})</span>
+    </button>
+  `;
+}
+
+function useComodin(type) {
+  const player = players[gameState.currentIndex];
+  const c = comodines[player];
+  if (c[type] === 0) return;
+
+  if (type === 'skip') {
+    c.skip--;
+    showToast('🛡️ Pase usado — sin penalización');
+    nextTurn(true, 0); // pasar sin puntos ni penalización
+  } else if (type === 'double') {
+    c.double--;
+    gameState.doubleActive = true;
+    showToast('⚡ ¡Doble puntos activado!');
+    renderComodines(player);
+  } else if (type === 'group') {
+    c.group--;
+    showToast('👥 ¡El reto lo hace todo el grupo!');
+    renderComodines(player);
+  }
+}
+
+// ============================================================
+// TIMER
+// ============================================================
+function startTimer(seconds) {
+  const wrap = document.getElementById('timerWrap');
+  const arc  = document.getElementById('timerArc');
+  const num  = document.getElementById('timerNum');
+  const circumference = 175.9;
+
+  wrap.style.display = 'block';
+  let remaining = seconds;
+  num.textContent = remaining;
+  arc.style.strokeDashoffset = 0;
+  arc.style.stroke = 'var(--fire)';
+
+  timerInterval = setInterval(() => {
+    remaining--;
+    num.textContent = remaining;
+    const progress = (seconds - remaining) / seconds;
+    arc.style.strokeDashoffset = circumference * progress;
+    arc.style.stroke = remaining <= 5 ? '#ef4444' : remaining <= 10 ? var_gold() : 'var(--fire)';
+    if (remaining <= 0) {
+      stopTimer();
+      showToast('⏱️ ¡Tiempo!');
+    }
+  }, 1000);
+}
+
+function var_gold() { return 'var(--gold)'; }
+
+function stopTimer() {
+  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+  document.getElementById('timerWrap').style.display = 'none';
+}
+
+// Inyecta nombres reales de jugadores en el texto
+function injectNames(text) {
+  if (players.length < 2) return text;
+  const current = players[gameState.currentIndex];
+  const others = players.filter(p => p !== current);
+  const pick = () => others[Math.floor(Math.random() * others.length)].split(' ')[0];
+  return text
+    .replace(/\{otro\}/gi, pick)
+    .replace(/alguien de aquí/gi, () => pick())
+    .replace(/alguien de este grupo/gi, () => pick())
+    .replace(/alguien del grupo/gi, () => pick());
+}
+
+function chooseType(type) {
+  if (gameState.shameActive) {
+    document.getElementById('shameBanner').classList.remove('visible');
+  }
+
+  const diff = document.getElementById('difficultyFilter').value;
+  const allowed = diff === 'soloextremo' ? ['extremo'] :
+                  diff === 'extremo' ? ['suave','media','fuerte','extremo'] :
+                  diff === 'all'     ? ['suave','media','fuerte'] :
+                  diff === 'media'   ? ['suave','media'] :
+                  diff === 'fuerte'  ? ['fuerte'] : ['suave'];
+
+  const noPhone = document.getElementById('noPhoneToggle')?.checked;
+  const pool = questions[type].filter(q =>
+    allowed.includes(q.diff) &&
+    matchesTheme(q, activeTheme) &&
+    !(noPhone && q.noPhone)
+  );
+  const used = type === 'truth' ? gameState.usedTruth : gameState.usedDare;
+
+  let available = pool.filter(q => !used.includes(pool.indexOf(q)));
+  if (available.length === 0) {
+    if (type === 'truth') gameState.usedTruth = [];
+    else gameState.usedDare = [];
+    available = pool;
+  }
+
+  if (available.length === 0) {
+    showToast('No hay preguntas disponibles con este filtro');
+    return;
+  }
+
+  // Shame: elegir la más difícil disponible
+  let q;
+  if (gameState.shameActive) {
+    const diffOrder = ['extremo','fuerte','media','suave'];
+    for (const d of diffOrder) {
+      const harder = available.filter(x => x.diff === d);
+      if (harder.length) { q = harder[Math.floor(Math.random() * harder.length)]; break; }
+    }
+    q = q || available[Math.floor(Math.random() * available.length)];
+  } else {
+    q = available[Math.floor(Math.random() * available.length)];
+  }
+
+  const idx = pool.indexOf(q);
+  if (type === 'truth') gameState.usedTruth.push(idx);
+  else gameState.usedDare.push(idx);
+
+  // Inyectar nombres
+  const finalText = injectNames(q.text);
+
+  // Registrar en historial
+  const player = players[gameState.currentIndex];
+  addToHistorial(player, type, finalText);
+
+  // Show card
+  document.getElementById('choiceContainer').style.display = 'none';
+  document.getElementById('pozoCard').className = 'question-card';
+  const card = document.getElementById('questionCard');
+  card.className = `question-card visible type-${type}`;
+
+  const badge = document.getElementById('qTypeBadge');
+  badge.className = `q-type-badge badge-${type}`;
+  badge.textContent = type === 'truth' ? '💬 VERDAD' : '🔥 RETO';
+
+  document.getElementById('qDiffBadge').textContent = diffEmoji(q.diff) + ' ' + q.diff.charAt(0).toUpperCase() + q.diff.slice(1);
+  document.getElementById('questionText').textContent = finalText;
+
+  if (type === 'truth') gameState.truths++;
+  else gameState.dares++;
+
+  document.getElementById('statTruths').textContent = gameState.truths;
+  document.getElementById('statDares').textContent = gameState.dares;
+
+  // Timer solo en retos si está activado
+  if (type === 'dare' && document.getElementById('timerToggle').checked) {
+    startTimer(30);
+  }
+}
+
+// ============================================================
+// YO NUNCA
+// ============================================================
+function chooseNunca() {
+  const diff = document.getElementById('difficultyFilter').value;
+  const noPhone = document.getElementById('noPhoneToggle')?.checked;
+  const allowed = diff === 'soloextremo' ? ['extremo'] :
+                  diff === 'extremo' ? ['suave','media','fuerte','extremo'] :
+                  diff === 'all'     ? ['suave','media','fuerte'] :
+                  diff === 'media'   ? ['suave','media'] :
+                  diff === 'fuerte'  ? ['fuerte'] : ['suave'];
+
+  const pool = questions.nunca.filter(q =>
+    allowed.includes(q.diff) && !(noPhone && q.noPhone)
+  );
+
+  if (!gameState.usedNunca) gameState.usedNunca = [];
+  let available = pool.filter((_, i) => !gameState.usedNunca.includes(i));
+  if (available.length === 0) {
+    gameState.usedNunca = [];
+    available = pool;
+  }
+  if (available.length === 0) { showToast('No hay frases con este filtro'); return; }
+
+  const q = available[Math.floor(Math.random() * available.length)];
+  gameState.usedNunca.push(pool.indexOf(q));
+
+  const player = players[gameState.currentIndex];
+  addToHistorial(player, 'nunca', q.text);
+
+  // Render vote chips for all players
+  const votesDiv = document.getElementById('nuncaVotes');
+  votesDiv.innerHTML = players.map(p => {
+    const emoji = playerEmojis[p] || '😀';
+    return `<div class="nunca-vote-chip" id="nvote-${p}" onclick="toggleNuncaVote('${p}')">
+      <span>${emoji}</span> ${p.split(' ')[0]}
+    </div>`;
+  }).join('');
+
+  document.getElementById('nuncaText').textContent = q.text;
+  document.getElementById('nuncaDiffBadge').textContent = diffEmoji(q.diff) + ' ' + q.diff.charAt(0).toUpperCase() + q.diff.slice(1);
+
+  document.getElementById('choiceContainer').style.display = 'none';
+  document.getElementById('questionCard').className = 'question-card';
+  document.getElementById('pozoCard').className = 'question-card';
+  document.getElementById('genderCard').className = 'question-card';
+  document.getElementById('nuncaCard').className = 'question-card visible type-nunca';
+}
+
+function toggleNuncaVote(playerName) {
+  const chip = document.getElementById('nvote-' + playerName);
+  const wasVoted = chip.classList.contains('voted');
+  chip.classList.toggle('voted', !wasVoted);
+  // Award/remove point
+  if (!wasVoted) {
+    scores[playerName].pts++;
+  } else {
+    scores[playerName].pts = Math.max(0, scores[playerName].pts - 1);
+  }
+  renderScores();
+}
+
+function choosePozo() {
+  const player = players[gameState.currentIndex];
+  const genero = getGenero(player);
+
+  if (!genero) {
+    // Mostrar selector de género
+    document.getElementById('choiceContainer').style.display = 'none';
+    document.getElementById('questionCard').className = 'question-card';
+    document.getElementById('pozoCard').className = 'question-card';
+    document.getElementById('genderCard').className = 'question-card visible type-pozo';
+    return;
+  }
+
+  _showPozoForPlayer(player, genero);
+}
+
+function selectGender(genero) {
+  const player = players[gameState.currentIndex];
+  playerGenders[player] = genero; // guardar para siempre en esta sesión
+  document.getElementById('genderCard').className = 'question-card';
+  _showPozoForPlayer(player, genero);
+}
+
+function _showPozoForPlayer(player, genero) {
+  const opuestoGenero = genero === 'chica' ? 'chico' : 'chica';
+  const listaTodos = opuestoGenero === 'chica' ? CLASE.chicas : CLASE.chicos;
+
+  let pool = players.filter(p => p !== player && getGenero(p) === opuestoGenero);
+  pool = pool.sort(() => Math.random() - 0.5);
+
+  if (pool.length < 4) {
+    const extra = listaTodos.filter(n => !pool.some(p => normStr(p.split(' ')[0]) === normStr(n)) && normStr(player.split(' ')[0]) !== normStr(n));
+    const extraShuffled = extra.sort(() => Math.random() - 0.5);
+    while (pool.length < 4 && extraShuffled.length > 0) pool.push(extraShuffled.shift());
+  }
+
+  const selected = pool.slice(0, 4);
+  const opciones = ['💀 Matar', '💋 Besar', '💍 Casarse', '🛏️ Acostarse'];
+
+  const grid = document.getElementById('pozoGrid');
+  grid.innerHTML = selected.map((persona, i) => {
+    const nombre = persona.split(' ')[0];
+    const optionsHtml = opciones.map(o => `<option value="${o}">${o}</option>`).join('');
+    return `
+      <div class="pozo-row">
+        <div class="pozo-girl-name">${nombre}</div>
+        <select class="pozo-select" id="pozo-sel-${i}" onchange="syncPozoSelects()">
+          <option value="">— elige —</option>
+          ${optionsHtml}
+        </select>
+      </div>
+    `;
+  }).join('');
+
+  document.getElementById('choiceContainer').style.display = 'none';
+  document.getElementById('questionCard').className = 'question-card';
+  document.getElementById('pozoCard').className = 'question-card visible type-pozo';
+  addToHistorial(player, 'pozo', selected.map(p => p.split(' ')[0]).join(', '));
+}
+
+function syncPozoSelects() {
+  const selects = [...document.querySelectorAll('.pozo-select')];
+  const taken = selects.map(s => s.value).filter(v => v !== '');
+
+  selects.forEach(sel => {
+    const current = sel.value;
+    [...sel.options].forEach(opt => {
+      if (opt.value === '') return;
+      opt.disabled = taken.includes(opt.value) && opt.value !== current;
+    });
+  });
+
+  // Unlock Hecho only when all 4 have a value
+  const allDone = selects.length === 4 && selects.every(s => s.value !== '');
+  const btn = document.getElementById('pozoHechoBtn');
+  btn.disabled = !allDone;
+  btn.style.opacity = allDone ? '1' : '0.35';
+}
+
+function nextTurn(completed, customPts) {
+  stopTimer();
+  const player = players[gameState.currentIndex];
+
+  if (customPts === undefined) {
+    if (completed) {
+      const base = 1;
+      const pts = gameState.doubleActive ? base * 2 : base;
+      scores[player].pts += pts;
+      scores[player].streak++;
+      if (gameState.doubleActive) showToast(`⚡ +${pts} puntos (x2)`);
+    } else {
+      scores[player].streak = 0;
+      showToast('😅 ¡Cobarde! Toca prenda...');
+    }
+  }
+
+  gameState.turns++;
+  gameState.currentIndex = (gameState.currentIndex + 1) % players.length;
+
+  // Lanzar ruleta entre turnos
+  launchRoulette();
+}
+
+
+
+// ============================================================
+// QUIÉN ES MÁS PROBABLE
+// ============================================================
+let probableVotes = {}; // { playerName: voteCount }
+
+function chooseProbable() {
+  const diff = document.getElementById('difficultyFilter').value;
+  const noPhone = document.getElementById('noPhoneToggle')?.checked;
+  const allowed = diff === 'soloextremo' ? ['extremo'] :
+                  diff === 'extremo' ? ['suave','media','fuerte','extremo'] :
+                  diff === 'all'     ? ['suave','media','fuerte'] :
+                  diff === 'media'   ? ['suave','media'] :
+                  diff === 'fuerte'  ? ['fuerte'] : ['suave'];
+
+  const pool = questions.probable.filter(q =>
+    allowed.includes(q.diff) && !(noPhone && q.noPhone)
+  );
+
+  if (!gameState.usedProbable) gameState.usedProbable = [];
+  let available = pool.filter((_, i) => !gameState.usedProbable.includes(i));
+  if (available.length === 0) { gameState.usedProbable = []; available = pool; }
+  if (available.length === 0) { showToast('No hay preguntas con este filtro'); return; }
+
+  const q = available[Math.floor(Math.random() * available.length)];
+  gameState.usedProbable.push(pool.indexOf(q));
+
+  const player = players[gameState.currentIndex];
+  addToHistorial(player, 'probable', q.text);
+
+  // Reset votes
+  probableVotes = {};
+  players.forEach(p => probableVotes[p] = 0);
+
+  // Render vote chips — cada jugador puede votar a cualquier otro (no a sí mismo)
+  const votesDiv = document.getElementById('probableVotes');
+  votesDiv.innerHTML = players.map(p => {
+    const emoji = playerEmojis[p] || '😀';
+    return `<div class="probable-vote-chip" id="pvote-${p}" onclick="castProbableVote('${p}')">
+      <span>${emoji}</span> ${p.split(' ')[0]}
+    </div>`;
+  }).join('');
+
+  document.getElementById('probableText').textContent = q.text;
+  document.getElementById('probableDiffBadge').textContent = diffEmoji(q.diff) + ' ' + q.diff.charAt(0).toUpperCase() + q.diff.slice(1);
+  document.getElementById('probableResult').textContent = '';
+  document.getElementById('probableRevealBtn').style.display = '';
+  document.getElementById('probableNextBtn').style.display = 'none';
+
+  document.getElementById('choiceContainer').style.display = 'none';
+  document.getElementById('questionCard').className = 'question-card';
+  document.getElementById('pozoCard').className = 'question-card';
+  document.getElementById('genderCard').className = 'question-card';
+  document.getElementById('nuncaCard').className = 'question-card';
+  document.getElementById('probableCard').className = 'question-card visible type-probable';
+}
+
+function castProbableVote(playerName) {
+  const chip = document.getElementById('pvote-' + playerName);
+  const isVoted = chip.classList.contains('voted');
+  // Toggle vote
+  if (isVoted) {
+    probableVotes[playerName]--;
+    chip.classList.remove('voted');
+  } else {
+    probableVotes[playerName]++;
+    chip.classList.add('voted');
+  }
+  // Update count badges
+  players.forEach(p => {
+    const c = document.getElementById('pvote-' + p);
+    const existing = c.querySelector('.vote-count');
+    if (existing) existing.remove();
+    if (probableVotes[p] > 0) {
+      const badge = document.createElement('span');
+      badge.className = 'vote-count';
+      badge.textContent = probableVotes[p];
+      c.appendChild(badge);
+    }
+  });
+}
+
+function revealProbable() {
+  const maxVotes = Math.max(...Object.values(probableVotes));
+  if (maxVotes === 0) { showToast('¡Nadie ha votado todavía!'); return; }
+  const winners = players.filter(p => probableVotes[p] === maxVotes);
+  const result = winners.map(p => (playerEmojis[p] || '🎯') + ' ' + p.split(' ')[0]).join(' & ');
+  document.getElementById('probableResult').textContent = result;
+  // Award a point to winner(s)
+  winners.forEach(p => { scores[p].pts++; scores[p].streak++; });
+  renderScores();
+  document.getElementById('probableRevealBtn').style.display = 'none';
+  document.getElementById('probableNextBtn').style.display = '';
+}
+
+// ============================================================
+// VIEW SCREEN
+// ============================================================
+let viewActiveTab = 'truth';
+let viewActiveDiff = 'all';
+
+function switchViewTab(type) {
+  viewActiveTab = type;
+  document.getElementById('viewTabTruth').className    = 'q-tab' + (type === 'truth'    ? ' active-truth'    : '');
+  document.getElementById('viewTabDare').className     = 'q-tab' + (type === 'dare'     ? ' active-dare'     : '');
+  document.getElementById('viewTabNunca').className    = 'q-tab' + (type === 'nunca'    ? ' active-nunca'    : '');
+  document.getElementById('viewTabProbable').className = 'q-tab' + (type === 'probable' ? ' active-probable' : '');
+  renderViewList();
+}
+
+function setViewDiff(diff, btn) {
+  viewActiveDiff = diff;
+  document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderViewList();
+}
+
+function renderViewList() {
+  const pool = viewActiveDiff === 'all'
+    ? questions[viewActiveTab]
+    : questions[viewActiveTab].filter(q => q.diff === viewActiveDiff);
+
+  document.getElementById('viewCount').textContent =
+    `${pool.length} pregunta${pool.length !== 1 ? 's' : ''}`;
+
+  document.getElementById('viewList').innerHTML = pool.length === 0
+    ? '<div class="empty-state">Sin preguntas con este filtro</div>'
+    : pool.map((q, i) => `
+        <div class="view-item">
+          <span class="view-num">${i + 1}</span>
+          <span style="flex:1">${q.text}</span>
+          <span class="view-diff vd-${q.diff}">${diffEmoji(q.diff)} ${q.diff}</span>
+        </div>
+      `).join('');
+}
+
+function updateViewTotal() {
+  document.getElementById('viewTotal').textContent =
+    questions.truth.length + questions.dare.length + questions.nunca.length + questions.probable.length;
+}
+
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+  if (id === 'setup') renderSetupQList();
+  if (id === 'view') { updateViewTotal(); renderViewList(); }
+}
+
+// ============================================================
+// SETTINGS PANEL
+// ============================================================
+function openSettings() {
+  document.getElementById('settingsOverlay').classList.remove('hidden');
+  // Sync shame slider row visibility
+  syncShameRow();
+}
+
+function closeSettings() {
+  document.getElementById('settingsOverlay').classList.add('hidden');
+}
+
+function closeSettingsOutside(e) {
+  if (e.target === document.getElementById('settingsOverlay')) closeSettings();
+}
+
+function syncShameRow() {
+  const on = document.getElementById('shameToggle').checked;
+  document.getElementById('shameSliderRow').style.opacity = on ? '1' : '0.35';
+  document.getElementById('shameSliderRow').style.pointerEvents = on ? '' : 'none';
+}
+
+function syncModeButtons() {
+  const showPozo     = document.getElementById('togglePozo').checked;
+  const showNunca    = document.getElementById('toggleNunca').checked;
+  const showProbable = document.getElementById('toggleProbable').checked;
+  document.getElementById('pozoBtn').style.display     = showPozo     ? '' : 'none';
+  document.getElementById('btnNunca').style.display    = showNunca    ? '' : 'none';
+  document.getElementById('btnProbable').style.display = showProbable ? '' : 'none';
+}
+
+// Wire shame toggle to slider row
+document.getElementById('shameToggle').addEventListener('change', syncShameRow);
+
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ============================================================
+// INIT
+// ============================================================
+renderSetupQList();
+</script>
+</body>
+</html>
