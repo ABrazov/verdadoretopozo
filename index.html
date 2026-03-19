@@ -286,6 +286,7 @@
   .q-tab.active-dare     { background: rgba(255,61,0,0.15);  color: var(--fire);  border: 1px solid rgba(255,61,0,0.3); }
   .q-tab.active-nunca    { background: rgba(34,197,94,0.15); color: #22c55e;      border: 1px solid rgba(34,197,94,0.3); }
   .q-tab.active-probable { background: rgba(251,146,60,0.15); color: #fb923c;     border: 1px solid rgba(251,146,60,0.3); }
+  .q-tab.active-botella  { background: rgba(99,102,241,0.15); color: #818cf8;     border: 1px solid rgba(99,102,241,0.3); }
 
   .q-list {
     max-height: 160px;
@@ -979,6 +980,7 @@
   .hist-pozo  { background: rgba(236,72,153,0.12); color: #ec4899; }
   .hist-nunca    { background: rgba(34,197,94,0.12);  color: #22c55e; }
   .hist-probable { background: rgba(251,146,60,0.12); color: #fb923c; }
+  .hist-botella  { background: rgba(99,102,241,0.12);  color: #818cf8; }
 
   /* ===== AVATAR EMOJI PICKER ===== */
   .avatar-emoji {
@@ -1009,21 +1011,6 @@
     transition: background 0.1s;
   }
   .emoji-opt:hover { background: rgba(255,255,255,0.1); }
-
-  /* ===== TEMA SELECTOR ===== */
-  .theme-pills {
-    display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px;
-  }
-
-  .theme-pill {
-    padding: 5px 12px; border-radius: 20px;
-    border: 1px solid rgba(255,255,255,0.1);
-    background: rgba(255,255,255,0.05);
-    color: var(--muted); font-size: 0.78rem; font-weight: 500;
-    cursor: pointer; transition: all 0.2s;
-  }
-  .theme-pill.active  { background: rgba(255,255,255,0.12); color: var(--text); border-color: rgba(255,255,255,0.25); }
-  .theme-pill:hover   { color: var(--text); }
 
   /* ===== YO NUNCA ===== */
   .choice-nunca {
@@ -1228,6 +1215,107 @@
     outline: none;
   }
   .settings-select:focus { border-color: rgba(255,255,255,0.25); }
+
+  /* ===== BOTELLA ===== */
+  .choice-botella {
+    background: rgba(99,102,241,0.08);
+    border-color: rgba(99,102,241,0.3);
+    color: #818cf8;
+  }
+  .choice-botella::before { background: radial-gradient(circle at center, rgba(99,102,241,0.15), transparent 70%); }
+  .choice-botella:hover { background: rgba(99,102,241,0.15); border-color: #818cf8; transform: translateY(-4px) scale(1.02); box-shadow: 0 12px 40px rgba(99,102,241,0.25); }
+  .choice-botella:hover::before { opacity: 1; }
+
+  .badge-botella { background: rgba(99,102,241,0.15); color: #818cf8; border: 1px solid rgba(99,102,241,0.3); }
+  .question-card.type-botella { border-color: rgba(99,102,241,0.25); box-shadow: 0 0 60px rgba(99,102,241,0.12); }
+  .toggle-indigo input:checked + .toggle-slider { background: rgba(99,102,241,0.25); border-color: rgba(99,102,241,0.5); }
+  .toggle-indigo input:checked + .toggle-slider::before { background: #818cf8; }
+
+  .bottle-wrap {
+    position: relative;
+    width: 300px; height: 300px;
+    margin: 0 auto 12px;
+  }
+
+  .bottle-circle-player {
+    position: absolute;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    /* top/left set by JS, centered via transform */
+    transform: translate(-50%, -50%);
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+
+  .bottle-circle-emoji {
+    font-size: 1.55rem; line-height: 1;
+    filter: grayscale(1); opacity: 0.32;
+    transition: all 0.45s cubic-bezier(0.34,1.4,0.64,1);
+    display: block;
+  }
+  .bottle-circle-emoji.hi-main {
+    filter: grayscale(0); opacity: 1; transform: scale(1.3);
+    text-shadow: 0 0 18px rgba(99,102,241,0.8);
+  }
+  .bottle-circle-emoji.hi-left {
+    filter: grayscale(0); opacity: 1; transform: scale(1.15);
+    text-shadow: 0 0 12px rgba(165,180,252,0.6);
+  }
+
+  .bottle-circle-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.7rem; letter-spacing: 1px;
+    color: var(--muted); white-space: nowrap;
+    transition: color 0.3s;
+  }
+  .bottle-circle-player.hi-main  .bottle-circle-name { color: #818cf8; }
+  .bottle-circle-player.hi-left  .bottle-circle-name { color: #a5b4fc; }
+
+  /* animated pointer above the main selected player */
+  .bottle-circle-player.hi-main::before {
+    content: '👉'; font-size: 0.85rem;
+    position: absolute; top: -22px; left: 50%;
+    transform: translateX(-50%);
+    animation: bpulse 0.55s ease infinite alternate;
+    pointer-events: none;
+  }
+  @keyframes bpulse {
+    from { transform: translateX(-50%) translateY(0); }
+    to   { transform: translateX(-50%) translateY(-4px); }
+  }
+
+  .bottle-center-wrap {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 68px; height: 68px;
+    cursor: pointer;
+    z-index: 2;
+  }
+  .bottle-center-wrap:hover .bottle-svg {
+    filter: drop-shadow(0 0 14px rgba(99,102,241,0.85));
+  }
+
+  .bottle-svg {
+    width: 100%; height: 100%;
+    filter: drop-shadow(0 0 8px rgba(99,102,241,0.55));
+    transform-origin: center center;
+  }
+
+  .bottle-spin-hint {
+    font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 6px; text-align: center;
+  }
+
+  .bottle-diff-badge {
+    font-size: 0.78rem; color: var(--muted);
+    margin: 0 0 6px; text-align: center; letter-spacing: 1px;
+  }
+
+  .bottle-dare-text {
+    font-size: clamp(0.95rem, 2.5vw, 1.15rem);
+    line-height: 1.6; color: var(--text);
+    margin: 4px 0 20px; min-height: 2em; text-align: center;
+  }
 </style>
 </head>
 <body>
@@ -1288,6 +1376,17 @@
             <span class="toggle-slider"></span>
           </label>
         </div>
+
+        <div class="setting-row">
+          <div class="setting-row-label">
+            <span>🍾 Botella</span>
+            <small>Gira y elige dos jugadores para un reto</small>
+          </div>
+          <label class="toggle-wrap toggle-indigo">
+            <input type="checkbox" id="toggleBotella" onchange="syncModeButtons()">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
       </div>
 
       <!-- DIFICULTAD Y TEMA -->
@@ -1304,17 +1403,6 @@
             <option value="extremo">💀 Todas + Extremo</option>
             <option value="soloextremo">🟣 Solo extremo</option>
           </select>
-        </div>
-
-        <div class="setting-row" style="flex-direction:column; align-items:flex-start; gap:6px; padding-top:14px;">
-          <span style="font-size:0.88rem;">🎭 Tema</span>
-          <div class="theme-pills" id="themePills" style="margin-bottom:0;">
-            <button class="theme-pill active" onclick="setTheme('all', this)">🌈 Todos</button>
-            <button class="theme-pill" onclick="setTheme('crush', this)">💘 Crush</button>
-            <button class="theme-pill" onclick="setTheme('verguenza', this)">😳 Vergüenza</button>
-            <button class="theme-pill" onclick="setTheme('secretos', this)">🤫 Secretos</button>
-            <button class="theme-pill" onclick="setTheme('hottakes', this)">🔥 Hot Takes</button>
-          </div>
         </div>
       </div>
 
@@ -1368,6 +1456,17 @@
             <span class="toggle-slider"></span>
           </label>
         </div>
+
+        <div class="setting-row">
+          <div class="setting-row-label">
+            <span>💋 No kissing</span>
+            <small>Sin preguntas ni retos de besar</small>
+          </div>
+          <label class="toggle-wrap toggle-pink">
+            <input type="checkbox" id="noKissToggle" onchange="renderSetupQList()">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
       </div>
 
     </div>
@@ -1407,7 +1506,7 @@
         <div class="q-count" id="qCount">Cargando preguntas...</div>
         <div class="q-list" id="setupQList"></div>
         <p style="font-size:0.78rem; color:var(--muted); margin-top:10px; text-align:center;">
-          Cambia dificultad y tema en <button onclick="openSettings()" style="background:none;border:none;color:var(--muted);font-size:0.78rem;cursor:pointer;text-decoration:underline;">⚙️ Ajustes</button>
+          Cambia la dificultad en <button onclick="openSettings()" style="background:none;border:none;color:var(--muted);font-size:0.78rem;cursor:pointer;text-decoration:underline;">⚙️ Ajustes</button>
         </p>
       </div>
     </div>
@@ -1472,6 +1571,9 @@
       <button class="choice-btn choice-probable" id="btnProbable" onclick="chooseProbable()">
         🤔<br>¿QUIÉN?
       </button>
+      <button class="choice-btn choice-botella" id="btnBotella" style="display:none;" onclick="chooseBotella()">
+        🍾<br>BOTELLA
+      </button>
     </div>
 
     <!-- Gender picker card -->
@@ -1521,6 +1623,41 @@
       </div>
     </div>
 
+    <!-- Botella card -->
+    <div class="question-card" id="botellaCard" style="max-width:420px;">
+      <div class="q-type-badge badge-botella">🍾 BOTELLA</div>
+      <p class="bottle-spin-hint" id="botellaHint">Toca la botella para girar</p>
+
+      <!-- Circle of players + bottle in center -->
+      <div class="bottle-wrap" id="bottleWrap">
+        <!-- Players positioned by JS around the circle -->
+        <div id="botellaPlayers"></div>
+        <!-- Bottle in center -->
+        <div class="bottle-center-wrap" onclick="spinBottle()">
+          <svg class="bottle-svg" id="bottleSvg" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+            <!-- arrow pointing up = 12 o'clock -->
+            <polygon points="30,2 24,14 36,14" fill="#c7d2fe"/>
+            <!-- neck -->
+            <rect x="25" y="12" width="10" height="14" rx="3" fill="#818cf8" opacity="0.8"/>
+            <!-- body -->
+            <rect x="20" y="24" width="20" height="30" rx="8" fill="#818cf8" opacity="0.9"/>
+            <!-- cap -->
+            <rect x="23" y="8"  width="14" height="7"  rx="3" fill="#6366f1"/>
+            <!-- shine -->
+            <rect x="22" y="27" width="4"  height="18" rx="2" fill="white" opacity="0.2"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="bottle-diff-badge" id="botellaDiffBadge" style="display:none;"></div>
+      <div class="bottle-dare-text" id="botellaDare" style="display:none;"></div>
+
+      <div class="card-actions">
+        <button class="btn-done" id="botellaNextBtn" onclick="nextTurn(true)" style="display:none;">✓ Siguiente</button>
+        <button class="btn-skip" onclick="nextTurn(false)" style="display:none;" id="botellaSkipBtn">↷ Saltar</button>
+      </div>
+    </div>
+
     <!-- Tarjeta de pregunta -->
     <div class="question-card" id="questionCard">
       <!-- Timer -->
@@ -1556,6 +1693,7 @@
           <button class="q-tab" id="viewTabDare" onclick="switchViewTab('dare')">🔥 Retos</button>
           <button class="q-tab" id="viewTabNunca" onclick="switchViewTab('nunca')">🙅 Yo Nunca</button>
           <button class="q-tab" id="viewTabProbable" onclick="switchViewTab('probable')">🤔 ¿Quién?</button>
+          <button class="q-tab" id="viewTabBotella" onclick="switchViewTab('botella')">🍾 Botella</button>
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
           <button class="filter-pill active" onclick="setViewDiff('all', this)">Todas</button>
@@ -1608,6 +1746,7 @@
 
 const SYSTEM_QUESTIONS = {
   truth: [
+    // ── ORIGINALES ──────────────────────────────────────────────────────────
     { text: "¿Cuál es la mentira más grande que has dicho y a quién?", diff: "media", system: true },
     { text: "¿Has tenido alguna vez un crush con alguien de este grupo?", diff: "media", system: true },
     { text: "¿Cuál es tu mayor inseguridad?", diff: "media", system: true },
@@ -1639,25 +1778,24 @@ const SYSTEM_QUESTIONS = {
     { text: "¿Alguna vez has hablado mal de un amigo a sus espaldas?", diff: "media", system: true },
     { text: "¿Cuál es la persona famosa con la que fantaseas?", diff: "suave", system: true },
     { text: "¿Qué haría tu familia si supiera lo que haces los fines de semana?", diff: "media", system: true },
-    // nuevas
     { text: "¿Es verdad que te parece peligrosamente atractivo/a alguien de aquí?", diff: "media", system: true },
     { text: "¿Es verdad que has stalkeado a alguien recientemente?", diff: "suave", system: true },
     { text: "¿Es verdad que tienes una red flag secreta que nadie conoce?", diff: "media", system: true },
     { text: "¿Es verdad que tendrías una cita con alguien de esta sala?", diff: "media", system: true },
     { text: "¿Es verdad que alguna vez has mentido para conseguir una cita?", diff: "media", system: true },
     { text: "¿Es verdad que tu relación más corta acabó por algo vergonzoso?", diff: "media", system: true },
-    { text: "¿Es verdad que has besado a más de una persona en la misma noche?", diff: "media", system: true },
+    { text: "¿Es verdad que has besado a más de una persona en la misma noche?", diff: "media", system: true, noKiss: true },
     { text: "¿Es verdad que lo más raro que has buscado en Google no te atreves a contarlo?", diff: "media", system: true },
     { text: "¿Es verdad que tu primer crush famoso era bastante cuestionable?", diff: "suave", system: true },
     { text: "¿Es verdad que te gusta alguien de esta sala más de lo que aparentas?", diff: "fuerte", system: true },
     { text: "¿Es verdad que has fingido estar ocupado/a para evitar a alguien que te gusta demasiado?", diff: "media", system: true },
     { text: "¿Es verdad que tienes un tipo físico que nadie esperaría de ti?", diff: "suave", system: true },
     { text: "¿Es verdad que alguna vez has insinuado algo a alguien y luego te hiciste el/la inocente?", diff: "media", system: true },
-    { text: "¿Es verdad que el beso más memorable de tu vida fue con alguien inesperado?", diff: "media", system: true },
+    { text: "¿Es verdad que el beso más memorable de tu vida fue con alguien inesperado?", diff: "media", system: true, noKiss: true },
     { text: "¿Es verdad que hay alguien aquí con quien tienes química pero finges que no?", diff: "fuerte", system: true },
-    { text: "¿Te besarías con alguien de esta sala si nadie lo supiera después?", diff: "fuerte", system: true },
+    { text: "¿Te besarías con alguien de esta sala si nadie lo supiera después?", diff: "fuerte", system: true, noKiss: true },
     { text: "¿Te gusta más de lo que admites alguien que está aquí ahora mismo?", diff: "fuerte", system: true },
-    { text: "¿Te besarías con la persona que tienes sentada enfrente?", diff: "fuerte", system: true },
+    { text: "¿Te besarías con la persona que tienes sentada enfrente?", diff: "fuerte", system: true, noKiss: true },
     { text: "¿Te gusta alguien de aquí lo suficiente como para darle tu número esta noche?", diff: "fuerte", system: true },
     { text: "¿Te gusta alguien de aquí a quien definitivamente no deberías gustarle?", diff: "fuerte", system: true },
     { text: "¿Hay alguien aquí cuya voz te pone nervioso/a de una forma que no puedes explicar?", diff: "media", system: true },
@@ -1677,12 +1815,12 @@ const SYSTEM_QUESTIONS = {
     { text: "¿Es verdad que hay alguien aquí cuya foto has mirado más de una vez en redes sociales esta semana?", diff: "fuerte", system: true },
     { text: "¿Es verdad que tu crush actual no sabe que existe para ti de esa manera?", diff: "media", system: true },
     { text: "¿Es verdad que alguna vez has hecho algo para llamar la atención de alguien que ni se dio cuenta?", diff: "media", system: true },
-    { text: "¿Es verdad que el peor beso de tu vida fue con alguien que te gustaba mucho?", diff: "media", system: true },
+    { text: "¿Es verdad que el peor beso de tu vida fue con alguien que te gustaba mucho?", diff: "media", system: true, noKiss: true },
     { text: "¿Es verdad que has bloqueado a alguien por miedo a lo que podrías hacer si seguías hablando?", diff: "fuerte", system: true },
     { text: "¿Es verdad que tienes un ritual antes de una cita que nunca confesarías?", diff: "media", system: true },
     { text: "¿Es verdad que alguna vez has reeleído una conversación tuya con alguien de aquí?", diff: "fuerte", system: true },
     { text: "¿Es verdad que si alguien de esta sala te pidiera bailar ahora mismo, aceptarías sin dudarlo?", diff: "media", system: true },
-    { text: "¿Es verdad que has practicado frente al espejo cómo reaccionar si alguien te besaba?", diff: "media", system: true },
+    { text: "¿Es verdad que has practicado frente al espejo cómo reaccionar si alguien te besaba?", diff: "media", system: true, noKiss: true },
     { text: "¿Es verdad que hay alguien aquí a quien le has dado un cumplido mental que nunca has dicho en voz alta?", diff: "media", system: true },
     { text: "¿Es verdad que tu forma de flirtear es tan sutil que la otra persona casi nunca se da cuenta?", diff: "suave", system: true },
     { text: "¿Es verdad que alguna vez has inventado un plan para coincidir a solas con alguien que te gustaba?", diff: "media", system: true },
@@ -1707,7 +1845,7 @@ const SYSTEM_QUESTIONS = {
     { text: "¿Quién te gusta en secreto ahora mismo?", diff: "extremo", system: true },
     { text: "¿Alguna vez has stalkeado mucho a alguien en redes? ¿A quién?", diff: "extremo", system: true },
     { text: "¿Cuál fue tu peor cita?", diff: "extremo", system: true },
-    { text: "¿Has besado a alguien de este grupo? Si no, ¿a quién besarías?", diff: "extremo", system: true },
+    { text: "¿Has besado a alguien de este grupo? Si no, ¿a quién besarías?", diff: "extremo", system: true, noKiss: true },
     { text: "¿Cuál es la cosa más atrevida que has hecho para llamar la atención de alguien que te gustaba?", diff: "extremo", system: true },
     { text: "¿Hay alguien aquí con quien hayas tenido tensión romántica pero nunca lo hayáis reconocido?", diff: "extremo", system: true },
     { text: "¿Cuál es el secreto más gordo que le guardas a tu mejor amigo/a?", diff: "extremo", system: true },
@@ -1745,8 +1883,281 @@ const SYSTEM_QUESTIONS = {
     { text: "¿Qué es lo que más desearías que alguien del grupo supiera sobre ti sin tener que decírselo?", diff: "extremo", system: true },
     { text: "¿Cuál es el momento exacto en que te diste cuenta de que alguien te importaba de más?", diff: "extremo", system: true },
     { text: "¿Hay algo que hayas hecho específicamente pensando en alguien del grupo sin que lo sepa?", diff: "extremo", system: true },
+
+    // ── NUEVAS — SUAVE ───────────────────────────────────────────────────────
+    { text: "¿Cuál es la aplicación del móvil que más vergüenza te daría que el grupo viera?", diff: "suave", system: true },
+    { text: "¿Cuál es el meme que más te ha hecho reír esta semana?", diff: "suave", system: true },
+    { text: "¿Cuál es la palabra o frase que repites tanto que ya ni te das cuenta?", diff: "suave", system: true },
+    { text: "¿Cuál es la película o serie que siempre pones de fondo aunque ya te la sabes de memoria?", diff: "suave", system: true },
+    { text: "¿Cuál es la cosa más pequeña que te pone de muy buen humor?", diff: "suave", system: true },
+    { text: "¿Cuál es la compra más impulsiva y absurda que has hecho en los últimos meses?", diff: "suave", system: true },
+    { text: "¿Cuál es la foto más rara que tienes guardada en el móvil y por qué la tienes?", diff: "suave", system: true },
+    { text: "¿Cuál es la cosa más rara que comes sola que no comerías delante de alguien?", diff: "suave", system: true },
+    { text: "¿Cuántas notificaciones sin leer tienes ahora mismo en el móvil?", diff: "suave", system: true },
+    { text: "¿Cuál es tu ritual más raro antes de dormir?", diff: "suave", system: true },
+    { text: "¿Cuál es el videojuego o juego al que eras secretamente adicto/a?", diff: "suave", system: true },
+    { text: "¿Tienes alguna superstición que no le has contado a nadie?", diff: "suave", system: true },
+    { text: "¿Cuál es la cosa más absurda a la que le tienes manía?", diff: "suave", system: true },
+    { text: "¿Cuántas alarmas pones por la mañana antes de levantarte?", diff: "suave", system: true },
+    { text: "¿Cuál es la canción de la que conoces la letra completa aunque nunca lo admitirías?", diff: "suave", system: true },
+    { text: "¿Cuál es tu frase de pésimo humor que solo tú encuentras graciosa?", diff: "suave", system: true },
+    { text: "¿Alguna vez has hablado solo en voz alta y alguien te ha escuchado?", diff: "suave", system: true },
+    { text: "¿Cuál es la habilidad inútil que tienes y de la que estás secretamente orgulloso/a?", diff: "suave", system: true },
+    { text: "¿Cuál es la manía más absurda que tienes al comer?", diff: "suave", system: true },
+    { text: "¿Cuál es la cosa más cara que has roto y nunca has confesado?", diff: "suave", system: true },
+    { text: "¿Cuánto tiempo llevas con el mismo corte de pelo y por qué no te atreves a cambiarlo?", diff: "suave", system: true },
+    { text: "¿Cuál es la cosa más ridícula que has googleado a las 3 de la mañana?", diff: "suave", system: true },
+    { text: "¿Cuál es tu postura favorita para dormir y cuánto la defiendes?", diff: "suave", system: true },
+    { text: "¿Cuál es la fobia más irracional que tienes que no puedes explicar con lógica?", diff: "suave", system: true },
+    { text: "¿Cuál es la cosa que más odias hacer pero que haces igual porque eres así?", diff: "suave", system: true },
+    { text: "¿Cuál es el libro que llevas años diciendo que vas a leer y nunca lees?", diff: "suave", system: true },
+    { text: "¿Cuál es la serie que abandonaste a medias y nunca retomaste aunque todo el mundo dice que vale la pena?", diff: "suave", system: true },
+    { text: "¿Cuántas veces has visto el mismo vídeo de YouTube solo porque te hace sentir bien?", diff: "suave", system: true },
+    { text: "¿Cuál es el objeto más raro que llevas siempre encima?", diff: "suave", system: true },
+    { text: "¿Cuál es el insulto más creativo que has dicho sin que nadie se diera cuenta de que era un insulto?", diff: "suave", system: true },
+    { text: "¿Cuál es la cosa más ridícula de la que te has sentido orgulloso/a esta semana?", diff: "suave", system: true },
+    { text: "¿Tienes algún objeto de la infancia que todavía guardas y nunca tiras?", diff: "suave", system: true },
+    { text: "¿Cuál es la cosa más innecesaria que sigues comprando aunque sabes que no la necesitas?", diff: "suave", system: true },
+    { text: "¿Cuál es el plan que siempre propones pero que en el fondo sabes que nunca se va a hacer realidad?", diff: "suave", system: true },
+    { text: "¿Cuál es el emoji que más usas y qué dice de ti?", diff: "suave", system: true },
+    { text: "¿Cuántas cosas tienes en el carrito de una tienda online sin comprar?", diff: "suave", system: true },
+    { text: "¿Cuál es la manía más rara que tienes para quedarte dormido/a?", diff: "suave", system: true },
+    { text: "¿Cuál es el programa de televisión más vergonzoso que has visto y no le cuentas a nadie?", diff: "suave", system: true },
+    { text: "¿Cuál es la cosa más dramática que has hecho cuando estabas solo/a en casa?", diff: "suave", system: true },
+    { text: "¿Cuántas veces has releído un mensaje antes de enviarlo y luego lo has enviado exactamente igual?", diff: "suave", system: true },
+    { text: "¿Cuál es la promesa que te has hecho a ti mismo/a más veces y nunca has cumplido?", diff: "suave", system: true },
+    { text: "¿Cuál es la cosa que haces mal a propósito para no tener que repetirla?", diff: "suave", system: true },
+    { text: "¿Cuál es la frase de película o serie que citas sin que nadie lo pida?", diff: "suave", system: true },
+    { text: "¿Alguna vez has googleado los síntomas de alguna enfermedad y te has convencido de que la tenías?", diff: "suave", system: true },
+    { text: "¿Cuál es la cosa más innecesaria que has comprado en Amazon a medianoche?", diff: "suave", system: true },
+    { text: "¿Cuántas veces has empezado una dieta y la has abandonado el mismo día?", diff: "suave", system: true },
+    { text: "¿Cuál es el sonido, olor o textura que te produce un rechazo irracional?", diff: "suave", system: true },
+    { text: "¿Cuál es la cosa más absurda que has hecho para evitar tener una conversación difícil?", diff: "suave", system: true },
+    { text: "¿Alguna vez has actuado como si entendieras algo que no entendías en absoluto para no quedar mal?", diff: "suave", system: true },
+    { text: "¿Cuánto tiempo llevas posponiendo algo que tienes que hacer y sabes perfectamente que tienes que hacer?", diff: "suave", system: true },
+    { text: "¿Cuál es la mentira inocente más frecuente que dices en el día a día?", diff: "suave", system: true },
+    { text: "¿Cuál es el momento en que más has actuado para impresionar a alguien que ni siquiera te gustaba?", diff: "suave", system: true },
+    { text: "¿Cuál es la cosa más rara que coleccionas o has coleccionado?", diff: "suave", system: true },
+    { text: "¿Alguna vez has fingido que no sabías usar algo tecnológico para que alguien te ayudara?", diff: "suave", system: true },
+    { text: "¿Cuál es la cosa más extraña que has encontrado mientras ordenabas tu habitación?", diff: "suave", system: true },
+    { text: "¿Cuántas veces has escrito un mensaje larguísimo y luego lo has borrado sin enviar?", diff: "suave", system: true },
+    { text: "¿Cuál es el plato que intentas cocinar siempre y siempre te sale mal?", diff: "suave", system: true },
+    { text: "¿Cuál es la cosa más ridícula que te ha preocupado esta semana?", diff: "suave", system: true },
+    { text: "¿Cuál es el videoclip musical que te sabes de memoria, coreografía incluida?", diff: "suave", system: true },
+    { text: "¿Alguna vez has terminado algo solo para poder decir que lo terminaste, sin haberlo disfrutado en absoluto?", diff: "suave", system: true },
+    { text: "¿Cuál es la cosa más random que tienes guardada en favoritos del navegador?", diff: "suave", system: true },
+    { text: "¿Cuál es el tipo de persona que te cae mal de forma inmediata e irracional?", diff: "suave", system: true },
+    { text: "¿Cuánto tiempo pasas mirando el techo antes de levantarte por las mañanas?", diff: "suave", system: true },
+    { text: "¿Cuál es el tema del que puedes hablar horas sin que te lo pidan?", diff: "suave", system: true },
+    { text: "¿Cuál es la palabra en otro idioma que usas más de lo necesario para parecer más interesante?", diff: "suave", system: true },
+    { text: "¿Alguna vez has guardado un meme específicamente para mandárselo a alguien en el momento exacto?", diff: "suave", system: true },
+    { text: "¿Cuál es el hobby que empezaste con mucha energía y abandonaste en menos de dos semanas?", diff: "suave", system: true },
+    { text: "¿Cuántos chats tienes silenciados ahora mismo y a quién corresponden?", diff: "suave", system: true },
+    { text: "¿Cuál es la frase que dices que nunca harías pero que en realidad ya has hecho?", diff: "suave", system: true },
+    { text: "¿Cuál es el olor que te transporta inmediatamente a un recuerdo específico?", diff: "suave", system: true },
+    { text: "¿Cuál es la cosa más pequeña que te ha arruinado el día de forma desproporcionada?", diff: "suave", system: true },
+    { text: "¿Tienes algún alter ego que uses cuando estás solo/a en casa?", diff: "suave", system: true },
+    { text: "¿Cuántas pestañas tienes abiertas en el navegador en este momento?", diff: "suave", system: true },
+    { text: "¿Cuál es la cosa que haces diferente cuando no te observa nadie?", diff: "suave", system: true },
+    { text: "¿Alguna vez has comprado algo solo porque alguien que te cae mal lo tenía?", diff: "suave", system: true },
+    { text: "¿Cuál es el plan que aceptas siempre aunque en el fondo no quieres ir?", diff: "suave", system: true },
+    { text: "¿Cuál es la personalidad de TikTok, YouTube o podcast que escuchas pero nunca admitiría?", diff: "suave", system: true },
+    { text: "¿Cuál es la cosa más dramática que has dicho en un chat de grupo sin querer?", diff: "suave", system: true },
+    { text: "¿Cuántas conversaciones de WhatsApp tienes archivadas que no piensas reabrir nunca?", diff: "suave", system: true },
+    { text: "¿Cuál es el sonido de notificación más vergonzoso que has tenido en el móvil?", diff: "suave", system: true },
+    { text: "¿Cuánto tiempo llevas usando el mismo wallpaper del móvil y qué es?", diff: "suave", system: true },
+    { text: "¿Cuál es la excusa más creativa que has usado para no ir al gimnasio?", diff: "suave", system: true },
+    { text: "¿Cuál es el tipo de vídeo que más te engancha en redes aunque te prometes que es el último?", diff: "suave", system: true },
+    { text: "¿Cuál es la cosa más random que te ha hecho llorar de risa en el último mes?", diff: "suave", system: true },
+    { text: "¿Alguna vez has mentido sobre haber leído o visto algo para no quedarte fuera de una conversación?", diff: "suave", system: true },
+    { text: "¿Cuántas veces has empezado a aprender un idioma nuevo y lo has dejado?", diff: "suave", system: true },
+    { text: "¿Cuál es la cosa que te da más pereza hacer aunque sabes que después de hacerla te sientes genial?", diff: "suave", system: true },
+    { text: "¿Cuál es el nombre de contacto más raro o gracioso que tienes guardado en el móvil?", diff: "suave", system: true },
+    { text: "¿Cuántas fotos tienes de comida en el carrete del móvil?", diff: "suave", system: true },
+    { text: "¿Alguna vez te has quedado dormido/a en un lugar donde definitivamente no deberías haberte quedado dormido?", diff: "suave", system: true },
+    { text: "¿Cuál es la tendencia o moda que sigues en secreto aunque publicamente la criticas?", diff: "suave", system: true },
+    { text: "¿Cuántos grupos de WhatsApp tienes silenciados y cuáles son?", diff: "suave", system: true },
+    { text: "¿Cuál es la cosa más irracional que haces por superstición o manía?", diff: "suave", system: true },
+    { text: "¿Cuántas notificaciones de apps sin abrir llevas acumulando y cuáles son?", diff: "suave", system: true },
+    { text: "¿Cuántos seguidores fantasma tienes en redes sociales que nunca eliminaste?", diff: "suave", system: true },
+    { text: "¿Alguna vez has googleado tu propio nombre para ver qué sale?", diff: "suave", system: true },
+    { text: "¿Cuál es la aplicación que tienes instalada y no has abierto en más de seis meses?", diff: "suave", system: true },
+    { text: "¿Cuál es el tic nervioso que tienes y que los demás notan antes que tú?", diff: "suave", system: true },
+    { text: "¿Cuánto tiempo llevas sin limpiar a fondo tu habitación y de qué te has sorprendido al hacerlo?", diff: "suave", system: true },
+    { text: "¿Cuál es el tipo de persona con quien siempre acabas mal aunque al principio parezca genial?", diff: "suave", system: true },
+
+    // ── NUEVAS — MEDIA ───────────────────────────────────────────────────────
+    { text: "¿Alguna vez has leído los mensajes de alguien sin su permiso? ¿De quién?", diff: "media", system: true },
+    { text: "¿Cuál es la cosa más turbia que has hecho por despecho?", diff: "media", system: true },
+    { text: "¿Cuántas veces has creado un perfil falso en redes para ver el de alguien?", diff: "media", system: true },
+    { text: "¿Alguna vez has puesto mala cara a alguien porque le fue demasiado bien?", diff: "media", system: true },
+    { text: "¿Cuál es la envidia más grande que has sentido por alguien de este grupo?", diff: "media", system: true },
+    { text: "¿Cuánto tiempo llevas evitando hablar de algo específico con alguien del grupo?", diff: "media", system: true },
+    { text: "¿Alguna vez has hecho ghosting a alguien que no se lo merecía?", diff: "media", system: true },
+    { text: "¿Cuál es la cosa que harías si supieras que nadie te va a juzgar nunca?", diff: "media", system: true },
+    { text: "¿Alguna vez has fingido que un plan tuyo salió mal para no tener que ir?", diff: "media", system: true },
+    { text: "¿Has robado alguna vez algo, por pequeño que sea?", diff: "media", system: true },
+    { text: "¿Cuál es el secreto de otra persona que te mueres por contar?", diff: "media", system: true },
+    { text: "¿Cuántas personas de este grupo tienes en modo 'follow' en redes sin que lo sepan?", diff: "media", system: true },
+    { text: "¿Alguna vez has exagerado algo de tu pasado para parecer más interesante?", diff: "media", system: true },
+    { text: "¿Cuál es la cosa más creativa que has inventado para no devolverle algo a alguien?", diff: "media", system: true },
+    { text: "¿Cuánto dinero debes en total a personas de tu entorno y no devuelves activamente?", diff: "media", system: true },
+    { text: "¿Alguna vez has fingido que no tenías datos para no tener que contestar?", diff: "media", system: true },
+    { text: "¿Cuál es la promesa que hiciste y sabes que nunca vas a cumplir?", diff: "media", system: true },
+    { text: "¿Alguna vez has hablado con el ex de alguien a sus espaldas?", diff: "media", system: true },
+    { text: "¿Cuántas conversaciones de las últimas dos semanas te arrepientes de haber tenido?", diff: "media", system: true },
+    { text: "¿Cuál es el defecto tuyo que más te cuesta reconocer cuando alguien te lo señala?", diff: "media", system: true },
+    { text: "¿Alguna vez te has alegrado de que algo malo le pasara a alguien, aunque luego te sintieras culpable?", diff: "media", system: true },
+    { text: "¿Cuántas veces has fingido estar de acuerdo con algo para evitar una discusión que tenías razón para ganar?", diff: "media", system: true },
+    { text: "¿Cuál es la historia de tu pasado que nunca cuentas completa porque si lo hicieras cambiaría todo?", diff: "media", system: true },
+    { text: "¿Alguna vez has usado información personal de alguien en tu contra durante una pelea?", diff: "media", system: true },
+    { text: "¿Cuál es la cosa más manipuladora que has hecho sin darte cuenta hasta más tarde?", diff: "media", system: true },
+    { text: "¿Alguna vez has dado un consejo que sabías que era malo pero te convenía que la otra persona lo siguiera?", diff: "media", system: true },
+    { text: "¿Cuántas veces has dicho que estabas bien cuando en realidad querías que alguien insistiera?", diff: "media", system: true },
+    { text: "¿Alguna vez has checkeado el móvil de alguien con quien estabas? ¿Qué encontraste?", diff: "media", system: true },
+    { text: "¿Cuál es la cosa de la que más te arrepientes que publicaste en redes sociales?", diff: "media", system: true },
+    { text: "¿Alguna vez has dejado de seguir a alguien en redes solo porque le estaba yendo demasiado bien?", diff: "media", system: true },
+    { text: "¿Cuántas personas del grupo tienen una versión de ti que no es del todo real?", diff: "media", system: true },
+    { text: "¿Cuál es el límite que te prometiste no cruzar y has cruzado al menos una vez?", diff: "media", system: true },
+    { text: "¿Alguna vez has guardado una conversación o captura por si acaso necesitabas usarla?", diff: "media", system: true },
+    { text: "¿Cuál es la vez que más has exagerado una historia para quedar mejor?", diff: "media", system: true },
+    { text: "¿Alguna vez has buscado a alguien de aquí en LinkedIn, Instagram o TikTok sin que lo sepa?", diff: "media", system: true },
+    { text: "¿Cuántas veces has dicho 'no estoy enfadado/a' estando claramente enfadado/a?", diff: "media", system: true },
+    { text: "¿Cuál es el momento en que has sido más falso/a con alguien de este grupo?", diff: "media", system: true },
+    { text: "¿Alguna vez has usado el humor para evitar tener una conversación seria que era necesaria?", diff: "media", system: true },
+    { text: "¿Cuántas veces has cancelado planes a última hora con una excusa inventada?", diff: "media", system: true },
+    { text: "¿Cuál es la cosa más passive-aggressive que has dicho o hecho sin que nadie se diera cuenta?", diff: "media", system: true },
+    { text: "¿Alguna vez has tardado en contestar a propósito para ver si la otra persona insistía?", diff: "media", system: true },
+    { text: "¿Cuál es la cosa que más te cuesta perdonar aunque en público digas que eres muy comprensivo/a?", diff: "media", system: true },
+    { text: "¿Alguna vez has dicho que no te importaba algo que te importaba muchísimo?", diff: "media", system: true },
+    { text: "¿Cuánto tiempo llevas guardando rencor a alguien sin habérselo dicho directamente?", diff: "media", system: true },
+    { text: "¿Cuál es la cosa de alguien de este grupo que te molesta pero nunca has dicho?", diff: "media", system: true },
+    { text: "¿Alguna vez has hecho creer a alguien que tenías otro plan para no quedar con él/ella?", diff: "media", system: true },
+    { text: "¿Cuántas veces has empezado a escribir un mensaje de disculpa y lo has borrado sin enviarlo?", diff: "media", system: true },
+    { text: "¿Cuál es el defecto que más criticas en otros y que también tienes tú?", diff: "media", system: true },
+    { text: "¿Alguna vez has saboteado algo tuyo propio por miedo a que funcionara demasiado bien?", diff: "media", system: true },
+    { text: "¿Cuántas personas de este grupo tienen una opinión tuya basada en algo que tú mismo/a construiste falsamente?", diff: "media", system: true },
+    { text: "¿Cuál es la cosa que más te da miedo que alguien de este grupo descubra sobre ti?", diff: "media", system: true },
+    { text: "¿Alguna vez has dicho 'me da igual' cuando en realidad era lo que más te importaba en ese momento?", diff: "media", system: true },
+    { text: "¿Cuántas veces has puesto 'en línea' para que alguien lo viera sin tener intención de contestar?", diff: "media", system: true },
+    { text: "¿Cuál es la mentira que más cómodo/a te sientes diciendo porque ya casi te la crees?", diff: "media", system: true },
+    { text: "¿Alguna vez has reconocido en privado algo que niegas completamente en público?", diff: "media", system: true },
+    { text: "¿Cuál es el consejo que le darías a tu yo de hace tres años que ahora mismo nadie te pediría?", diff: "media", system: true },
+    { text: "¿Alguna vez has utilizado la vulnerabilidad de alguien para acercarte más a esa persona de lo que debías?", diff: "media", system: true },
+    { text: "¿Cuántos secretos de alguien de este grupo sabes tú que esa persona no sabe que sabes?", diff: "media", system: true },
+    { text: "¿Cuál es la cosa que más te da vergüenza de tu comportamiento en redes sociales hace unos años?", diff: "media", system: true },
+    { text: "¿Alguna vez has sido el/la tercero/a en discordia en una situación romántica ajena?", diff: "media", system: true },
+    { text: "¿Cuántas veces has pedido perdón sin sentirlo realmente?", diff: "media", system: true },
+    { text: "¿Cuál es la cosa más mezquina que has pensado de alguien aunque en voz alta dijeras todo lo contrario?", diff: "media", system: true },
+    { text: "¿Alguna vez has tomado partido en una discusión ajena dependiendo de quién te convenía más?", diff: "media", system: true },
+    { text: "¿Cuántas personas del grupo tienen de ti una imagen que no corresponde completamente a la realidad?", diff: "media", system: true },
+    { text: "¿Cuál es la cosa que no has hecho por miedo al qué dirán aunque lo querías con todas tus fuerzas?", diff: "media", system: true },
+    { text: "¿Alguna vez has mentido sobre tu pasado romántico para parecer más o menos experimentado/a?", diff: "media", system: true },
+    { text: "¿Cuál es la escena de tu vida que, si la viera alguien de este grupo, lo cambiaría todo?", diff: "media", system: true },
+    { text: "¿Alguna vez has actuado como que todo iba bien justo en el peor momento de tu vida?", diff: "media", system: true },
+    { text: "¿Cuántas veces has decidido no decir algo importante porque 'no era el momento' y ya nunca lo fue?", diff: "media", system: true },
+    { text: "¿Cuál es el peor momento en que has cometido una traición pequeña y lo justificaste con algo?", diff: "media", system: true },
+    { text: "¿Alguna vez has sabido que alguien te mentía y has preferido no decir nada?", diff: "media", system: true },
+    { text: "¿Cuántas veces has querido que alguien fracasara para sentirte mejor tú?", diff: "media", system: true },
+    { text: "¿Cuál es la cosa de la que estás más arrepentido/a en este grupo y nunca has pedido perdón?", diff: "media", system: true },
+    { text: "¿Alguna vez has enviado una captura de pantalla de una conversación privada que no debías?", diff: "media", system: true },
+    { text: "¿Cuál es el mejor cumplido que has recibido de alguien de aquí y nunca se lo has devuelto?", diff: "media", system: true },
+    { text: "¿Alguna vez has dejado que alguien se creyera responsable de algo que en realidad fue culpa tuya?", diff: "media", system: true },
+    { text: "¿Cuántas veces te has comparado con alguien de este grupo y has salido perdiendo a propósito para no sentir presión?", diff: "media", system: true },
+    { text: "¿Cuál es la cosa que más sabes hacer y nunca muestras porque prefieres que no te pidan que lo hagas?", diff: "media", system: true },
+    { text: "¿Alguna vez has dejado que alguien pensara que era tu tipo cuando en realidad no lo era, para no herir su ego?", diff: "media", system: true },
+    { text: "¿Cuántas veces has mentido sobre cuánto te importaba alguien que en realidad te importaba demasiado?", diff: "media", system: true },
+    { text: "¿Cuál es la cosa de ti mismo/a que más has escondido dentro de este grupo?", diff: "media", system: true },
+    { text: "¿Alguna vez has dejado de ser como eres para que alguien te quisiera más?", diff: "media", system: true },
+
+    // ── NUEVAS — FUERTE ──────────────────────────────────────────────────────
+    { text: "¿Cuál es la cosa más oscura que has deseado que le pasara a alguien?", diff: "fuerte", system: true },
+    { text: "¿Alguna vez has estado dispuesto/a a romper una amistad por alguien que al final no valió la pena?", diff: "fuerte", system: true },
+    { text: "¿Cuánto tiempo llevas guardando algo que, si alguien del grupo lo supiera, cambiaría la dinámica?", diff: "fuerte", system: true },
+    { text: "¿Cuál es la traición más grande que has cometido y con la que todavía convives?", diff: "fuerte", system: true },
+    { text: "¿Alguna vez has querido a alguien de una forma que sabías que no era sana para ninguno de los dos?", diff: "fuerte", system: true },
+    { text: "¿Cuántas veces te has inventado una versión de ti mismo/a completamente distinta para gustarle a alguien?", diff: "fuerte", system: true },
+    { text: "¿Cuál es el secreto que más peso te da cargar y que nadie de aquí sabe?", diff: "fuerte", system: true },
+    { text: "¿Alguna vez has hecho algo de lo que te arrepientes profundamente pero que harías de nuevo si las circunstancias fueran las mismas?", diff: "fuerte", system: true },
+    { text: "¿Cuál es la mentira más sostenida en el tiempo que has mantenido con alguien cercano?", diff: "fuerte", system: true },
+    { text: "¿Alguna vez has utilizado a alguien como sustituto de otra persona que no podías tener?", diff: "fuerte", system: true },
+    { text: "¿Cuánto tiempo llevas queriendo decirle algo importante a alguien del grupo y no te atreves?", diff: "fuerte", system: true },
+    { text: "¿Cuál es la cosa que harías si supieras que la persona más importante en tu vida nunca se va a enterar?", diff: "fuerte", system: true },
+    { text: "¿Alguna vez has dejado ir a alguien importante por cobardía y todavía te pesa?", diff: "fuerte", system: true },
+    { text: "¿Cuál es la peor versión de ti mismo/a que alguien de este grupo ha visto?", diff: "fuerte", system: true },
+    { text: "¿Alguna vez has estado seguro/a de que alguien del grupo te mentía sobre algo importante y has callado?", diff: "fuerte", system: true },
+    { text: "¿Cuál es la cosa de tu pasado que más influye en cómo te comportas hoy y que nadie sabe?", diff: "fuerte", system: true },
+    { text: "¿Alguna vez has hecho el mal y te has sentido bien después?", diff: "fuerte", system: true },
+    { text: "¿Cuántas veces has preferido perder a alguien antes que admitir que estabas equivocado/a?", diff: "fuerte", system: true },
+    { text: "¿Cuál es la relación de este grupo que más miedo te daría perder y por qué?", diff: "fuerte", system: true },
+    { text: "¿Alguna vez has dejado que alguien creyera que te importaba cuando en realidad ya habías desconectado?", diff: "fuerte", system: true },
+    { text: "¿Cuál es la cosa que más te avergüenza de cómo te has comportado en una relación?", diff: "fuerte", system: true },
+    { text: "¿Alguna vez has hecho daño a alguien de forma consciente para protegerte emocionalmente?", diff: "fuerte", system: true },
+    { text: "¿Cuál es el papel que juegas en el grupo que no elegiste pero del que nunca has salido?", diff: "fuerte", system: true },
+    { text: "¿Alguna vez has fingido que eras feliz en algo durante tanto tiempo que empezaste a creerlo?", diff: "fuerte", system: true },
+    { text: "¿Cuál es el miedo más real que tienes ahora mismo sobre tu futuro?", diff: "fuerte", system: true },
+    { text: "¿Alguna vez has roto con alguien sin darle una razón real porque la verdad te daba demasiado miedo?", diff: "fuerte", system: true },
+    { text: "¿Cuál es la cosa de la que más te arrepientes en los últimos doce meses?", diff: "fuerte", system: true },
+    { text: "¿Alguna vez has querido desaparecer de la vida de alguien de este grupo sin que nadie te preguntara por qué?", diff: "fuerte", system: true },
+    { text: "¿Cuántas veces has actuado como el/la malo/a de la historia de alguien y tenías razón de hacerlo?", diff: "fuerte", system: true },
+    { text: "¿Cuál es la cosa que más te ha cambiado en el último año y que nadie del grupo nota todavía?", diff: "fuerte", system: true },
+    { text: "¿Alguna vez has sentido que amas a alguien pero no te gustaba como persona?", diff: "fuerte", system: true },
+    { text: "¿Cuál es la dinámica tóxica en la que participas dentro de este grupo aunque todos lo sabéis?", diff: "fuerte", system: true },
+    { text: "¿Alguna vez has fingido que habías superado a alguien para que esa persona pensara que ya no te importaba?", diff: "fuerte", system: true },
+    { text: "¿Cuál es la cosa más difícil que has tenido que hacer en silencio sin que nadie lo supiera?", diff: "fuerte", system: true },
+    { text: "¿Alguna vez has deseado que algo de alguien del grupo acabara para que las cosas cambiaran entre vosotros?", diff: "fuerte", system: true },
+    { text: "¿Cuántas veces has esperado que alguien de este grupo diera el primer paso y no lo ha dado?", diff: "fuerte", system: true },
+    { text: "¿Cuál es la cosa de la que nadie en este grupo te ha preguntado nunca pero que deberían?", diff: "fuerte", system: true },
+    { text: "¿Alguna vez has sabido que estabas a punto de cometer un error y lo has cometido de todas formas porque una parte de ti quería ver qué pasaba?", diff: "fuerte", system: true },
+    { text: "¿Cuál es la amistad de este grupo que más has dado por sentada y que en el fondo sabes que no deberías?", diff: "fuerte", system: true },
+    { text: "¿Alguna vez te has enamorado de alguien sabiendo desde el principio que acabaría mal?", diff: "fuerte", system: true },
+    { text: "¿Cuántas veces has escondido dolor detrás del humor en este grupo?", diff: "fuerte", system: true },
+    { text: "¿Cuál es la cosa que más te cuesta perdonarte a ti mismo/a de los últimos dos años?", diff: "fuerte", system: true },
+    { text: "¿Alguna vez has sentido que alguien del grupo te conoce mejor de lo que te gustaría?", diff: "fuerte", system: true },
+    { text: "¿Cuántas veces has cambiado quién eres para no perder a alguien?", diff: "fuerte", system: true },
+    { text: "¿Cuál es el momento en que más has necesitado a alguien de este grupo y no lo has pedido?", diff: "fuerte", system: true },
+    { text: "¿Alguna vez has dejado que alguien te tratara mal porque en el fondo creías que te lo merecías?", diff: "fuerte", system: true },
+    { text: "¿Cuántas veces has fingido que no te afectaba algo que te estaba destrozando por dentro?", diff: "fuerte", system: true },
+    { text: "¿Cuál es la conversación más importante que nunca has tenido con alguien de este grupo?", diff: "fuerte", system: true },
+    { text: "¿Alguna vez has deseado ser otra persona cuando estabas con alguien de este grupo?", diff: "fuerte", system: true },
+    { text: "¿Cuál es la cosa de alguien de este grupo que más admiras y nunca le has dicho?", diff: "fuerte", system: true },
+    { text: "¿Alguna vez has guardado resentimiento hacia alguien del grupo y lo has disfrazado de indiferencia?", diff: "fuerte", system: true },
+
+    // ── NUEVAS — EXTREMO ─────────────────────────────────────────────────────
+    { text: "¿Cuál es la cosa que harías esta noche si supieras que nadie del grupo lo recordaría mañana?", diff: "extremo", system: true },
+    { text: "¿Hay alguien de este grupo que te haya roto el corazón sin saberlo?", diff: "extremo", system: true },
+    { text: "¿Cuál es la cosa que más deseas de alguien del grupo que no te atreves ni a admitir contigo mismo/a?", diff: "extremo", system: true },
+    { text: "¿Alguna vez has estado en el punto de decirle algo a alguien del grupo que habría cambiado todo entre vosotros?", diff: "extremo", system: true },
+    { text: "¿Cuál es la persona de este grupo por quien harías algo que va completamente contra tus principios?", diff: "extremo", system: true },
+    { text: "¿Alguna vez has sentido que lo que hay entre tú y alguien de este grupo es demasiado para llamarlo solo amistad?", diff: "extremo", system: true },
+    { text: "¿Cuál es el secreto que, si saliese a la luz esta noche, lo cambiaría absolutamente todo en este grupo?", diff: "extremo", system: true },
+    { text: "¿Hay algo que lleves tiempo a punto de hacer respecto a alguien de esta sala que todavía no has hecho?", diff: "extremo", system: true },
+    { text: "¿Cuál es la cosa que más lamentarías no haber dicho si este fuera el último momento que pasas con estas personas?", diff: "extremo", system: true },
+    { text: "¿Hay alguien en esta sala a quien hayas amado en silencio durante más tiempo del que admitiría?", diff: "extremo", system: true },
+    { text: "¿Cuál es la verdad que nunca contarás sobre lo que sientes por alguien de aquí?", diff: "extremo", system: true },
+    { text: "¿Alguna vez has sentido que tenías más con alguien de este grupo de lo que ninguno de los dos se atrevía a poner en palabras?", diff: "extremo", system: true },
+    { text: "¿Cuál es el pensamiento sobre alguien de esta sala que más te asusta tener?", diff: "extremo", system: true },
+    { text: "¿Hay alguien aquí que cambiaría tu vida completamente si te diera la oportunidad y tú lo sabes?", diff: "extremo", system: true },
+    { text: "¿Cuál es la cosa que nunca le dirás a alguien del grupo porque sabes que cambiaría todo para siempre?", diff: "extremo", system: true },
+    { text: "¿Alguna vez has pensado que la persona que más te gusta de este grupo no sabe ni lo que te provoca?", diff: "extremo", system: true },
+    { text: "¿Cuántas veces has imaginado un futuro con alguien de esta sala aunque sepas que nunca lo dirías en voz alta?", diff: "extremo", system: true },
+    { text: "¿Cuál es el momento de esta noche en el que más te has tenido que controlar?", diff: "extremo", system: true },
+    { text: "¿Alguna vez has necesitado a alguien de este grupo de una forma que te ha asustado?", diff: "extremo", system: true },
+    { text: "¿Cuál es la cosa que más miedo te da decir aquí pero que formaría parte de la respuesta más honesta que podrías dar?", diff: "extremo", system: true },
+    { text: "¿Hay algo que hayas sentido esta noche por alguien de aquí que no esperabas sentir?", diff: "extremo", system: true },
+    { text: "¿Cuál es la línea que nunca cruzarías con alguien del grupo aunque te lo pidieran?", diff: "extremo", system: true },
+    { text: "¿Alguna vez has deseado poder reescribir algo que pasó entre tú y alguien de este grupo?", diff: "extremo", system: true },
+    { text: "¿Cuál es el momento exacto en que alguien de este grupo pasó de ser una persona más a importarte de una forma diferente?", diff: "extremo", system: true },
+    { text: "¿Hay alguien en esta sala que podría hacerte hacer algo completamente irracional con solo pedírtelo?", diff: "extremo", system: true },
+    { text: "¿Cuál es la cosa que más te arrepientes de no haber hecho con alguien de este grupo cuando tuviste la oportunidad?", diff: "extremo", system: true },
+    { text: "¿Alguna vez has sentido que perder a alguien de este grupo sería devastador pero nunca se lo has dicho?", diff: "extremo", system: true },
+    { text: "¿Cuál es la conversación que más necesitas tener con alguien de aquí y que todavía no has podido empezar?", diff: "extremo", system: true },
+    { text: "¿Cuántas veces has esperado que alguien de esta sala lo entendiera sin tener que explicárselo?", diff: "extremo", system: true },
+    { text: "¿Cuál es la forma en que alguien del grupo te afecta que no le dejarías ver jamás?", diff: "extremo", system: true },
   ],
+
   dare: [
+    // ── ORIGINALES ──────────────────────────────────────────────────────────
     { text: "Imita a alguien del grupo durante 30 segundos sin decir quién es.", diff: "suave", system: true },
     { text: "Llama a alguien de tus contactos y dile que llevas días pensando en él/ella.", diff: "fuerte", system: true },
     { text: "Haz 10 sentadillas cantando tu canción favorita.", diff: "suave", system: true },
@@ -1765,8 +2176,8 @@ const SYSTEM_QUESTIONS = {
     { text: "Deja que el grupo te ponga un apodo y úsalo el resto de la noche.", diff: "suave", system: true },
     { text: "Canta el estribillo de la última canción que escuchaste.", diff: "suave", system: true },
     { text: "Escribe un tweet comprometedor sobre ti mismo y muéstralo al grupo.", diff: "media", system: true },
-    // nuevos
     { text: "Envía un emoji insinuante a alguien al azar.", diff: "media", system: true },
+    { text: "Si tienes el juego 'Throw Throw, Burrito' todos los jugadores deberán lanzarte un burrito con la fuerza que quieras. Si no lo tienes, o no está disponible, este reto se anula automáticamente.", diff: "media", system: true },
     { text: "Haz una confesión incómoda ahora mismo.", diff: "media", system: true },
     { text: "Mira fijamente a alguien 10 segundos sin reírte.", diff: "suave", system: true },
     { text: "Imita tu mejor intento de seducción.", diff: "media", system: true },
@@ -1774,19 +2185,19 @@ const SYSTEM_QUESTIONS = {
     { text: "Susurra algo atrevido al oído de la persona a tu derecha/izquierda.", diff: "fuerte", system: true },
     { text: "Deja que alguien del grupo revise tus últimos 5 mensajes.", diff: "fuerte", system: true, noPhone: true },
     { text: "Haz 10 flexiones de forma 'sexy'.", diff: "media", system: true },
-    { text: "Describe con mímica, sin hablar, cómo crees que besa la persona a tu derecha/izquierda.", diff: "media", system: true },
+    { text: "Describe con mímica, sin hablar, cómo crees que besa la persona a tu derecha/izquierda.", diff: "media", system: true, noKiss: true },
     { text: "Deja que alguien del grupo te escriba algo en la piel con un dedo.", diff: "fuerte", system: true },
     { text: "Pon tu cabeza en el regazo de alguien durante 30 segundos.", diff: "fuerte", system: true },
     { text: "Haz tu mejor cara de 'te estoy seduciendo' mirando a los ojos a alguien.", diff: "media", system: true },
     { text: "Deja que el grupo decida quién te da un masaje de 20 segundos en los hombros.", diff: "fuerte", system: true },
-    { text: "Confiesa en voz alta a quién de la sala le darías un beso ahora mismo.", diff: "fuerte", system: true },
+    { text: "Confiesa en voz alta a quién de la sala le darías un beso ahora mismo.", diff: "fuerte", system: true, noKiss: true },
     { text: "Acércate a alguien al oído y dile lo que más te gusta de él/ella físicamente.", diff: "fuerte", system: true },
-    { text: "Dale un beso en la mejilla a la persona que más te guste de la sala.", diff: "fuerte", system: true },
+    { text: "Dale un beso en la mejilla a la persona que más te guste de la sala.", diff: "fuerte", system: true, noKiss: true },
     { text: "Acaricia el pelo de la persona a tu derecha/izquierda durante 20 segundos.", diff: "fuerte", system: true },
     { text: "Muerde tu labio inferior mientras miras fijamente a alguien del grupo durante 15 segundos.", diff: "media", system: true },
     { text: "Acerca tu cara a la de alguien hasta que vuestras narices casi se toquen, y mantén la posición 10 segundos.", diff: "fuerte", system: true },
     { text: "Di en voz alta cuál es tu 'tipo' y señala a quien más se acerque en la sala.", diff: "fuerte", system: true },
-    { text: "Describe con detalle, sin nombrarle, cómo besarías a alguien de aquí.", diff: "fuerte", system: true },
+    { text: "Describe con detalle, sin nombrarle, cómo besarías a alguien de aquí.", diff: "fuerte", system: true, noKiss: true },
     { text: "Manda un audio de voz susurrando algo sugerente a quien elijas del grupo.", diff: "fuerte", system: true },
     { text: "Di en voz alta una cosa que harías si estuvieras a solas con la persona a tu derecha/izquierda.", diff: "fuerte", system: true },
     { text: "Deja que el grupo te haga 3 preguntas de sí o no sobre tu vida amorosa y responde con total honestidad.", diff: "media", system: true },
@@ -1796,7 +2207,7 @@ const SYSTEM_QUESTIONS = {
     { text: "Deja que alguien del grupo desbloquee tu teléfono y ponga el fondo de pantalla que quiera.", diff: "media", system: true, noPhone: true },
     { text: "Haz un roleplay de 30 segundos: eres alguien que está intentando ligar contigo mismo/a.", diff: "media", system: true },
     { text: "Escribe con el dedo en la espalda de alguien una palabra; esa persona tiene que adivinarla.", diff: "media", system: true },
-    { text: "Haz tu mejor beso al aire dirigido a alguien del grupo mientras le miras a los ojos.", diff: "media", system: true },
+    { text: "Haz tu mejor beso al aire dirigido a alguien del grupo mientras le miras a los ojos.", diff: "media", system: true, noKiss: true },
     { text: "El grupo elige a dos personas; deben mirarse a los ojos sin parpadear el máximo tiempo posible.", diff: "media", system: true },
     { text: "Toca el brazo de alguien muy despacio de muñeca a hombro mientras cuentas hasta diez en voz alta.", diff: "fuerte", system: true },
     { text: "Abraza a la persona que más te guste.", diff: "media", system: true },
@@ -1873,12 +2284,168 @@ const SYSTEM_QUESTIONS = {
     { text: "Confiesa algo que hayas pensado sobre alguien del grupo que nunca te hayas atrevido a decir.", diff: "fuerte", system: true },
     { text: "Escribe en papel el nombre de la persona del grupo con la que tendrías más tensión en una película romántica. Se lee en voz alta.", diff: "extremo", system: true },
     { text: "Mira a los ojos a la persona del grupo que más te altera y dile algo que normalmente no dirías.", diff: "extremo", system: true },
-    { text: "El grupo elige a dos personas. Tienes que decir cuál de las dos te gustaría besar y por qué.", diff: "extremo", system: true },
+    { text: "El grupo elige a dos personas. Tienes que decir cuál de las dos te gustaría besar y por qué.", diff: "extremo", system: true, noKiss: true },
     { text: "Di el nombre de la persona de este grupo con la que más química sientes, aunque no quieras reconocerlo.", diff: "extremo", system: true },
     { text: "Confiesa algo que hayas hecho o sentido respecto a alguien del grupo que nunca pensaste que saldrías a la luz.", diff: "extremo", system: true },
     { text: "El grupo tiene 60 segundos para hacerte todas las preguntas que quieran. Tienes que responderlas todas.", diff: "extremo", system: true },
+
+    // ── NUEVOS — SUAVE ───────────────────────────────────────────────────────
+    { text: "Habla en rima durante los próximos 2 turnos. Si fallas, empieza de cero.", diff: "suave", system: true },
+    { text: "Haz la voz del villano de tu película favorita durante 20 segundos.", diff: "suave", system: true },
+    { text: "Dibuja un autorretrato en 30 segundos y muéstralo al grupo.", diff: "suave", system: true },
+    { text: "Haz tu mejor interpretación de alguien bailando en una boda de los años 90.", diff: "suave", system: true },
+    { text: "Invéntate un eslogan publicitario para ti mismo/a y repítelo con convicción.", diff: "suave", system: true },
+    { text: "Recita el abecedario al revés lo más rápido que puedas.", diff: "suave", system: true },
+    { text: "Imita el sonido exacto de cuando alguien no quiere reírse de algo pero no puede evitarlo.", diff: "suave", system: true },
+    { text: "Haz tu mejor imitación de un presentador de teletienda vendiendo un calcetín.", diff: "suave", system: true },
+    { text: "Describe el argumento de tu película favorita usando solo gestos durante 30 segundos.", diff: "suave", system: true },
+    { text: "Haz la pose de superhéroe más épica que puedas y mantén 15 segundos.", diff: "suave", system: true },
+    { text: "Inventa y canta un jingle de 10 segundos sobre alguien del grupo.", diff: "suave", system: true },
+    { text: "Di el nombre de todos los presentes añadiendo 'el/la gran' delante con la voz más épica que tengas.", diff: "suave", system: true },
+    { text: "Cuenta hasta 20 en orden pero sustituyendo los números pares por un sonido animal.", diff: "suave", system: true },
+    { text: "Haz la imitación más exagerada posible de alguien enviando un mensaje de voz en público.", diff: "suave", system: true },
+    { text: "Escribe con la mano no dominante el nombre de la persona a tu lado y muéstralo.", diff: "suave", system: true },
+    { text: "Camina de un lado a otro de la habitación como si estuvieras en una pasarela de moda.", diff: "suave", system: true },
+    { text: "Haz tu mejor cara de: acabo de recibir una noticia inesperada y muy buena.", diff: "suave", system: true },
+    { text: "Imita cómo crees que ronca la persona a tu derecha.", diff: "suave", system: true },
+    { text: "Di cinco palabras en el idioma más raro que sepas aunque solo sepas cinco palabras.", diff: "suave", system: true },
+    { text: "Explica en 20 segundos qué hace una lavadora como si fuera un discurso político.", diff: "suave", system: true },
+    { text: "Haz el sonido de un móvil vibrando sobre una mesa de madera con la boca.", diff: "suave", system: true },
+    { text: "Describe a alguien del grupo como si fuera un ingrediente de una receta de cocina.", diff: "suave", system: true },
+    { text: "Haz tu mejor cara de: acabo de morder un limón y además era mentira que me gustara el limón.", diff: "suave", system: true },
+    { text: "Pon el temporizador de 60 segundos y no puedes dejar de moverte hasta que suene.", diff: "suave", system: true },
+    { text: "Haz la pose más incómoda que se te ocurra y mantenla mientras el grupo cuenta hasta 15.", diff: "suave", system: true },
+    { text: "Improvisa un haiku sobre alguien del grupo en este momento.", diff: "suave", system: true },
+    { text: "Imita a la persona de este grupo que más tarde contesta los mensajes.", diff: "suave", system: true },
+    { text: "Haz tu mejor imitación de alguien mirando el móvil en el baño de una fiesta.", diff: "suave", system: true },
+    { text: "Pronuncia tu nombre completo al revés tres veces seguidas sin equivocarte.", diff: "suave", system: true },
+    { text: "Di algo absolutamente mundano con cara de que es el secreto más importante del mundo.", diff: "suave", system: true },
+    { text: "Imita a alguien del grupo justo en el momento en que se le cae algo al suelo.", diff: "suave", system: true },
+    { text: "Haz durante 20 segundos tu mejor actuación de estar muy muy aburrido/a en una reunión.", diff: "suave", system: true },
+    { text: "Convence al grupo en 30 segundos de que eres el mejor cocinero del mundo. Invéntate todo.", diff: "suave", system: true },
+    { text: "Haz un monólogo de 20 segundos hablando de lo apasionante que es doblar calcetines.", diff: "suave", system: true },
+    { text: "Haz que alguien del grupo adivine qué película estás describiendo usando solo cinco sonidos.", diff: "suave", system: true },
+    { text: "Habla durante 30 segundos sobre cualquier cosa sin usar los artículos 'el', 'la', 'los', 'las'.", diff: "suave", system: true },
+    { text: "Improvisa una llamada de 20 segundos a un servicio de atención al cliente para quejarte de que la luna salió tarde.", diff: "suave", system: true },
+    { text: "Di el nombre de cada persona del grupo acompañado de su 'poder especial' que tú le inventas.", diff: "suave", system: true },
+    { text: "Imita a la persona del grupo que más cara rara pone cuando le llega una notificación.", diff: "suave", system: true },
+    { text: "Haz el ruido más extraño que puedas durante 5 segundos sin parar.", diff: "suave", system: true },
+    { text: "Describe la última cosa que compraste online como si fuera el tesoro más valioso del mundo.", diff: "suave", system: true },
+    { text: "Convence al grupo durante 20 segundos de que los pingüinos son en realidad los animales más peligrosos del planeta.", diff: "suave", system: true },
+    { text: "Actúa durante 20 segundos como si el aire de esta habitación fuera el mejor que has respirado en tu vida.", diff: "suave", system: true },
+    { text: "Imita cómo crees que cocina la persona sentada enfrente de ti.", diff: "suave", system: true },
+    { text: "Haz tu mejor imitación de la persona del grupo que más exagerada es al contar historias.", diff: "suave", system: true },
+    { text: "Crea y repite tres veces una frase que sea el lema de tu vida en este momento.", diff: "suave", system: true },
+    { text: "Convierte tu nombre en un acrónimo donde cada letra describe algo de tu personalidad.", diff: "suave", system: true },
+    { text: "Imita cómo te imaginas que duerme la persona que tienes a tu izquierda.", diff: "suave", system: true },
+    { text: "Habla como si fueras un robot que acaba de aprender a hablar en español durante 30 segundos.", diff: "suave", system: true },
+    { text: "Haz tu mejor pose de foto para un perfil de LinkedIn mientras alguien finge fotografiarte.", diff: "suave", system: true },
+    { text: "Imita a la persona del grupo que más se tarda en elegir qué pedir cuando vais a comer.", diff: "suave", system: true },
+
+    // ── NUEVOS — MEDIA ───────────────────────────────────────────────────────
+    { text: "El grupo elige a alguien. Tienes que llamarle por teléfono ahora mismo y hablar durante 20 segundos sin decir por qué llamas.", diff: "media", system: true, noPhone: true },
+    { text: "Hazle una foto a la persona de tu derecha ahora mismo y ponla de fondo de pantalla. La tienes que mantener hasta mañana.", diff: "media", system: true, noPhone: true },
+    { text: "El grupo elige dos personas. Tenéis que hacer un sketch de pareja discutiendo durante 30 segundos.", diff: "media", system: true },
+    { text: "Haz una declaración de amor en otro idioma durante 20 segundos. Puedes inventarte el idioma.", diff: "media", system: true },
+    { text: "Describe en 30 segundos a la persona ideal para ti, mirando a alguien del grupo a los ojos mientras lo haces.", diff: "media", system: true },
+    { text: "Manda un audio de voz al grupo de WhatsApp de los presentes cantando 10 segundos de la canción que el grupo elija.", diff: "media", system: true, noPhone: true },
+    { text: "Haz durante 30 segundos la actuación de alguien viendo algo que le emociona mucho pero intenta disimularlo.", diff: "media", system: true },
+    { text: "El grupo elige a dos personas. Tenéis que sincronizar vuestros movimientos en silencio durante 20 segundos.", diff: "media", system: true },
+    { text: "Deja que alguien del grupo te cambie el nombre en el chat. Así te quedarás hasta mañana.", diff: "media", system: true, noPhone: true },
+    { text: "Haz una crítica gastronómica de 30 segundos del agua que tienes en tu vaso como si fuera un vino de alta gama.", diff: "media", system: true },
+    { text: "Imita durante 20 segundos a alguien del grupo respondiendo una pregunta en una entrevista de trabajo.", diff: "media", system: true },
+    { text: "Actúa como si llevaras 5 años sin ver a alguien del grupo al que el grupo elija. 20 segundos.", diff: "media", system: true },
+    { text: "Describe tu peor cita como si fuera el tráiler de una película de terror.", diff: "media", system: true },
+    { text: "El grupo elige una emoción. Tienes que actuar esa emoción durante 20 segundos sin decir ninguna palabra.", diff: "media", system: true },
+    { text: "Haz una foto de grupo pero pon la cara más rara de todas. Esa foto se manda al chat.", diff: "media", system: true, noPhone: true },
+    { text: "Convierte en anécdota épica y dramática algo completamente mundano que te haya pasado hoy.", diff: "media", system: true },
+    { text: "Elige a alguien del grupo y actúa como si fuera tu ídolo absoluto durante 20 segundos.", diff: "media", system: true },
+    { text: "Haz la mejor cara de 'no me importa pero me importa mucho' durante 15 segundos mirando a alguien del grupo.", diff: "media", system: true },
+    { text: "Escribe en el chat del grupo una frase que empiece por 'Nunca os he dicho que…' y termínala con algo falso pero convincente.", diff: "media", system: true, noPhone: true },
+    { text: "Imita la forma de caminar de la persona que tienes enfrente. Esa persona tiene que adivinarlo sin que nadie se lo diga.", diff: "media", system: true },
+    { text: "El grupo elige a alguien. Tienes que darle un discurso de motivación de 30 segundos sobre algo totalmente ridículo de su vida.", diff: "media", system: true },
+    { text: "Actúa durante 20 segundos como si fueras el/la protagonista de una telenovela que acaba de descubrir la traición del siglo.", diff: "media", system: true },
+    { text: "Haz la imitación de cómo alguien del grupo rechazaría una cita con alguien.", diff: "media", system: true },
+    { text: "El grupo vota: ¿quién del grupo sería mejor actor/actriz? Esa persona tiene que improvisar una escena de 20 segundos.", diff: "media", system: true },
+    { text: "Inventa en 30 segundos una historia de cómo conociste a alguien del grupo que no tiene nada que ver con la realidad.", diff: "media", system: true },
+    { text: "Haz una entrevista de trabajo de 30 segundos a alguien del grupo para el puesto de 'mejor amigo/a oficial'.", diff: "media", system: true },
+    { text: "Actúa como si alguien del grupo fuera tu archienemigo durante 20 segundos y luego confiesa que en realidad te cae muy bien.", diff: "media", system: true },
+    { text: "Elige a alguien del grupo y haz el monólogo interior que crees que tiene esa persona cuando llega a casa después de una noche de fiesta.", diff: "media", system: true },
+    { text: "El grupo elige: tienes que hacer tu mejor imitación de cómo crees que esa persona baila cuando nadie la ve.", diff: "media", system: true },
+    { text: "Deja que alguien del grupo escriba en tu brazo con rotulador una palabra que el grupo elige. Lo llevas el resto de la noche.", diff: "media", system: true },
+    { text: "Describe a la persona que tienes enfrente como si fuera un perfil de app de citas. Tienes 20 segundos.", diff: "media", system: true },
+    { text: "Pon tu mano encima de la de alguien que el grupo elija y no la retires hasta que pase un turno completo.", diff: "media", system: true },
+    { text: "Haz una imitación de cómo crees que alguien del grupo ligaría con alguien por primera vez.", diff: "media", system: true },
+    { text: "Elige a alguien del grupo y explica por qué sería el/la mejor protagonista de una comedia romántica.", diff: "media", system: true },
+    { text: "Di el nombre de cada persona del grupo con el adjetivo romántico que mejor le define según tú.", diff: "media", system: true },
+    { text: "El grupo elige a alguien. Tienes que susurrarle algo que creas que nadie más del grupo le diría jamás.", diff: "media", system: true },
+    { text: "Actúa como si acabaras de recibir el mensaje más emocionante de tu vida mientras el grupo observa tu reacción.", diff: "media", system: true },
+    { text: "Pon la mano en el hombro de la persona que el grupo elija y no la quites hasta que esa persona te lo pida.", diff: "media", system: true },
+    { text: "Describe cómo sería la boda perfecta entre dos personas del grupo que el grupo mismo elija.", diff: "media", system: true },
+    { text: "Haz el sonido de cómo crees que late el corazón de alguien del grupo cuando está cerca de su crush.", diff: "media", system: true },
+    { text: "Elige a alguien del grupo y escríbele en la palma de la mano tres palabras que lo definan.", diff: "media", system: true },
+    { text: "El grupo vota: ¿quién tiene la risa más contagiosa? Esa persona tiene que reírse durante 10 segundos seguidos.", diff: "media", system: true },
+    { text: "Hazle un cumplido a cada persona del grupo, uno diferente y personal para cada uno, sin repetir adjetivos.", diff: "media", system: true },
+    { text: "Actúa como si llevaras enamorado/a de la persona a tu izquierda desde hace años y acabas de reunir el valor para decírselo.", diff: "media", system: true },
+    { text: "Elige a alguien del grupo y dile cuál crees que es su mayor fortaleza y su mayor debilidad. Sin filtros pero con cariño.", diff: "media", system: true },
+    { text: "El grupo elige a dos personas. Tenéis que improvisar un primer encuentro entre dos personajes que el grupo inventa.", diff: "media", system: true },
+    { text: "Haz durante 20 segundos tu mejor interpretación de alguien que está esperando un mensaje que no llega.", diff: "media", system: true },
+    { text: "Actúa como si fueras el/la mejor amigo/a de la persona a tu derecha y tienes que defenderla ante el grupo con todo el drama posible.", diff: "media", system: true },
+    { text: "Di tres verdades sobre alguien del grupo que el grupo elija, empezando cada una con 'Lo que admiro de ti es…'.", diff: "media", system: true },
+    { text: "Elige a alguien del grupo y explícale en 30 segundos cuál crees que es el momento de este año en que más te has alegrado por él/ella.", diff: "media", system: true },
+
+    // ── NUEVOS — FUERTE ──────────────────────────────────────────────────────
+    { text: "Siéntate en el regazo de la persona que el grupo elija durante el siguiente turno completo.", diff: "fuerte", system: true },
+    { text: "Deja que la persona a tu izquierda te dibuje algo en la mejilla con rotulador y lo llevas hasta que alguien te lo quite.", diff: "fuerte", system: true },
+    { text: "El grupo elige a alguien. Tenéis que daros un abrazo de 30 segundos sin moveros ni hablar.", diff: "fuerte", system: true },
+    { text: "Elige a alguien del grupo y cuéntale en susurros lo que pensarías si os quedárais solos en esta habitación.", diff: "fuerte", system: true },
+    { text: "Deja que alguien del grupo te haga una pregunta completamente íntima y tienes que responder con total honestidad.", diff: "fuerte", system: true },
+    { text: "Haz tu mejor imitación de cómo besarías a la persona que el grupo elija. Sin besar. Solo la actuación.", diff: "fuerte", system: true, noKiss: true },
+    { text: "Di tres cosas que genuinamente admiras de la persona del grupo que menos esperaría escucharlo.", diff: "fuerte", system: true },
+    { text: "El grupo vota quién tiene los labios más bonitos. Esa persona tiene que recibir un cumplido específico de cada uno.", diff: "fuerte", system: true },
+    { text: "Pon las manos en los hombros de alguien del grupo, míralo a los ojos y dile algo que nunca le hayas dicho.", diff: "fuerte", system: true },
+    { text: "Confiesa en voz alta la cosa que más te gustaría que alguien del grupo supiera sobre ti.", diff: "fuerte", system: true },
+    { text: "Describe en 30 segundos, sin nombrar a nadie, la persona del grupo que más te ha sorprendido esta noche.", diff: "fuerte", system: true },
+    { text: "El grupo elige: tienes que bailar muy cerca de alguien durante 30 segundos con la música que el grupo elija.", diff: "fuerte", system: true },
+    { text: "Deja que alguien del grupo te tome la mano, la sostenga y cuente algo sobre ti mirándola.", diff: "fuerte", system: true },
+    { text: "Confiesa a qué persona del grupo recurres cuando necesitas ayuda de verdad y explica por qué.", diff: "fuerte", system: true },
+    { text: "Elige a alguien del grupo y dile la única cosa que cambiarías de cómo os tratáis.", diff: "fuerte", system: true },
+    { text: "Haz un monólogo de 30 segundos sobre lo que sientes cuando alguien del grupo entra en la habitación.", diff: "fuerte", system: true },
+    { text: "El grupo elige: tienes que cruzar toda la habitación caminando hacia alguien, pararle delante y decirle una sola palabra sin explicar cuál.", diff: "fuerte", system: true },
+    { text: "Deja que alguien del grupo te acaricie el brazo muy despacio durante 10 segundos sin hablar ninguno de los dos.", diff: "fuerte", system: true },
+    { text: "Confiesa a alguien del grupo algo que hayas estado a punto de decirle antes de hoy y nunca has podido.", diff: "fuerte", system: true },
+    { text: "El grupo elige a dos personas. Tenéis 30 segundos para improvisado el momento más romántico posible con lo que tengáis a mano.", diff: "fuerte", system: true },
+    { text: "Deja que la persona a tu derecha te cambie algo de como estás sentado/a ahora mismo y te quedas así el próximo turno.", diff: "fuerte", system: true },
+    { text: "Di en voz alta la cosa de alguien del grupo que más envidia te da aunque nunca lo admitiría.", diff: "fuerte", system: true },
+    { text: "Elige a alguien del grupo y cuéntale en 20 segundos cómo crees que será su vida en cinco años.", diff: "fuerte", system: true },
+    { text: "El grupo elige: tienes que sentarte muy cerca de alguien y hablarle al oído durante 20 segundos sobre cualquier cosa.", diff: "fuerte", system: true },
+    { text: "Deja que alguien del grupo te ponga la mano en la cara y la mantenga ahí mientras cuenta hasta diez.", diff: "fuerte", system: true },
+    { text: "Confiesa cuál es la persona del grupo con quien tienes la conversación más interesante y explica qué habláis.", diff: "fuerte", system: true },
+    { text: "Haz durante 20 segundos la interpretación de alguien que intenta no demostrar que le gusta la persona que tiene al lado.", diff: "fuerte", system: true },
+    { text: "El grupo vota: ¿quién del grupo sería mejor pareja? Esa persona tiene que enumerar sus tres mejores cualidades como pareja.", diff: "fuerte", system: true },
+    { text: "Elige a alguien del grupo y descríbele en 30 segundos cómo lo verías en diez años con todo el detalle que puedas.", diff: "fuerte", system: true },
+    { text: "Di en voz alta la cosa más honesta que puedas decirle a alguien del grupo que sepas que necesita escuchar.", diff: "fuerte", system: true },
+
+    // ── NUEVOS — EXTREMO ─────────────────────────────────────────────────────
+    { text: "El grupo decide: tienes que decirle en voz alta a alguien del grupo algo que llevas callando desde hace tiempo.", diff: "extremo", system: true },
+    { text: "Confiesa en voz alta cuál es la persona de este grupo que más te ha hecho dudar de ti mismo/a.", diff: "extremo", system: true },
+    { text: "El grupo elige a dos personas. Tenéis que mirarse a los ojos en silencio durante un minuto entero. Sin moverse. Sin hablar.", diff: "extremo", system: true },
+    { text: "Elige a alguien del grupo y dile la cosa que más miedo te daría que esa persona supiera de ti.", diff: "extremo", system: true },
+    { text: "Deja que la persona que el grupo elija te haga tres preguntas que nunca te ha podido hacer. Tienes que responderlas todas.", diff: "extremo", system: true },
+    { text: "Confiesa a alguien del grupo cuál ha sido el momento de esta noche en que más has pensado en esa persona.", diff: "extremo", system: true },
+    { text: "El grupo elige: tienes que decirle a alguien lo que sentirías si esa persona desapareciera de tu vida mañana.", diff: "extremo", system: true },
+    { text: "Di en voz alta cuál es la persona de este grupo con quien sientes que todavía hay algo sin resolver.", diff: "extremo", system: true },
+    { text: "El grupo vota: ¿quién del grupo te conoce menos? Tienes que contarle a esa persona algo completamente real de ti en 60 segundos.", diff: "extremo", system: true },
+    { text: "Elige a alguien del grupo y dile en voz alta lo que más te gustaría que pasara entre vosotros dos que todavía no ha pasado.", diff: "extremo", system: true },
+    { text: "Confiesa si hay alguien en esta sala a quien te hayas imaginado besando esta noche. Di su nombre.", diff: "extremo", system: true, noKiss: true },
+    { text: "El grupo elige a dos personas. Tenéis que deciros mutuamente, en voz alta, la verdad más grande que nunca os habéis dicho.", diff: "extremo", system: true },
+    { text: "Di en voz alta cuál es la persona del grupo con quien tienes más cosas sin decir y elige una para decirla ahora.", diff: "extremo", system: true },
+    { text: "Elige a alguien del grupo y cuéntale el momento exacto en que tu imagen de él/ella cambió, para bien o para mal.", diff: "extremo", system: true },
+    { text: "Confiesa a alguien del grupo si ha habido un momento esta noche en que hayas querido estar a solas con esa persona.", diff: "extremo", system: true },
   ],
+
   nunca: [
+    // ── ORIGINALES ──────────────────────────────────────────────────────────
     { text: "Yo nunca he llorado con una película delante de alguien.", diff: "suave" },
     { text: "Yo nunca he fingido que me gustaba algo que me regalaron.", diff: "suave" },
     { text: "Yo nunca he hecho el muerto cuando alguien me llamaba.", diff: "suave" },
@@ -1902,15 +2469,91 @@ const SYSTEM_QUESTIONS = {
     { text: "Yo nunca he guardado sentimientos por alguien durante más de 6 meses sin decírselo.", diff: "fuerte" },
     { text: "Yo nunca he mandado un mensaje en broma esperando que la otra persona lo tomara en serio.", diff: "fuerte" },
     { text: "Yo nunca he mentido sobre dónde estaba o con quién.", diff: "fuerte" },
-    { text: "Yo nunca he besado a alguien que le gustaba a un amigo o amiga.", diff: "fuerte" },
+    { text: "Yo nunca he besado a alguien que le gustaba a un amigo o amiga.", diff: "fuerte", noKiss: true },
     { text: "Yo nunca he tenido sentimientos por alguien que está en esta habitación ahora mismo.", diff: "extremo" },
     { text: "Yo nunca he estado a punto de decirle algo importante a alguien y me he echado atrás.", diff: "extremo" },
     { text: "Yo nunca he hecho algo de lo que me arrepiento profundamente con alguien del grupo.", diff: "extremo" },
     { text: "Yo nunca he querido que alguien de aquí me pidiera algo que no me ha pedido nunca.", diff: "extremo" },
     { text: "Yo nunca he fingido no tener sentimientos cuando claramente los tenía.", diff: "extremo" },
     { text: "Yo nunca he fantasiado con una situación que involucra a alguien de este grupo.", diff: "extremo" },
+
+    // ── NUEVAS ───────────────────────────────────────────────────────────────
+    { text: "Yo nunca he comprado algo solo para impresionar a alguien.", diff: "suave" },
+    { text: "Yo nunca he googleado cómo hacer algo que ya sabía hacer para que alguien me viera aprenderlo.", diff: "suave" },
+    { text: "Yo nunca he faltado a algo importante por quedarme viendo series.", diff: "suave" },
+    { text: "Yo nunca he comido en la cama y me he convencido de que era un plan de vida válido.", diff: "suave" },
+    { text: "Yo nunca he fingido que mi batería estaba muerta para no tener que contestar.", diff: "suave" },
+    { text: "Yo nunca he vuelto a ver el perfil de alguien a quien bloqueé usando otra cuenta.", diff: "suave" },
+    { text: "Yo nunca he enviado un audio de voz y luego me he arrepentido a los dos segundos.", diff: "suave" },
+    { text: "Yo nunca me he emocionado con un anuncio de televisión.", diff: "suave" },
+    { text: "Yo nunca he llegado tarde a algo importante y he puesto una excusa ridícula.", diff: "suave" },
+    { text: "Yo nunca he fingido que me gustaba una película solo porque a todo el mundo le gustaba.", diff: "suave" },
+    { text: "Yo nunca he hecho scroll infinito en el perfil de alguien durante más de 20 minutos.", diff: "suave" },
+    { text: "Yo nunca he practicado una sonrisa frente al espejo antes de salir.", diff: "suave" },
+    { text: "Yo nunca he comprado algo online en un momento de bajón emocional.", diff: "suave" },
+    { text: "Yo nunca he fingido entender una referencia cultural que no conocía de nada.", diff: "suave" },
+    { text: "Yo nunca he respondido 'en camino' cuando todavía estaba eligiendo qué ponerme.", diff: "suave" },
+    { text: "Yo nunca me he inventado que tenía algo importante para salir de un plan que no quería.", diff: "suave" },
+    { text: "Yo nunca he cantado en la ducha como si fuera un concierto en estadio.", diff: "suave" },
+    { text: "Yo nunca he dejado una conversación en visto porque no sabía qué contestar y se me hizo tan tarde que ya era imposible responder.", diff: "suave" },
+    { text: "Yo nunca he fingido reírme con un chiste que no entendí.", diff: "suave" },
+    { text: "Yo nunca he tenido un alter ego con nombre propio cuando estoy solo/a en casa.", diff: "suave" },
+    { text: "Yo nunca he tomado una decisión importante guiándome por el horóscopo.", diff: "suave" },
+    { text: "Yo nunca he pedido perdón por algo sin sentirlo.", diff: "media" },
+    { text: "Yo nunca he exagerado una historia para hacerla más interesante.", diff: "media" },
+    { text: "Yo nunca he hablado mal de alguien delante de quien ese alguien creía que era su amigo.", diff: "media" },
+    { text: "Yo nunca he leído los mensajes de alguien sin su permiso.", diff: "media" },
+    { text: "Yo nunca he fingido que no me importaba algo que en realidad me estaba comiendo por dentro.", diff: "media" },
+    { text: "Yo nunca he usado los sentimientos de alguien para salir mejor parado/a de una situación.", diff: "media" },
+    { text: "Yo nunca me he alegrado en secreto de que algo no le saliera bien a alguien.", diff: "media" },
+    { text: "Yo nunca he guardado rencor durante más de un mes a alguien del grupo sin decírselo.", diff: "media" },
+    { text: "Yo nunca he creado un perfil falso para ver lo que alguien publicaba sin que me viera.", diff: "media" },
+    { text: "Yo nunca he dejado que alguien creyera que éramos más cercanos de lo que éramos.", diff: "media" },
+    { text: "Yo nunca he enviado una captura de pantalla de una conversación privada.", diff: "media" },
+    { text: "Yo nunca he usado a alguien como plan B mientras esperaba a que el plan A funcionara.", diff: "media" },
+    { text: "Yo nunca he ignorado una señal de que alguien estaba mal porque no quería lidiar con ello.", diff: "media" },
+    { text: "Yo nunca he mentido sobre cuánto me gustaba alguien para proteger mi imagen.", diff: "media" },
+    { text: "Yo nunca he hecho algo cruel y me he convencido de que la otra persona lo merecía.", diff: "media" },
+    { text: "Yo nunca he dado un consejo que sabía que era malo porque me convenía que siguieran ese camino.", diff: "media" },
+    { text: "Yo nunca he dejado de ser yo mismo/a para gustarle a alguien.", diff: "media" },
+    { text: "Yo nunca he fingido tener más experiencia de la que tenía para impresionar a alguien.", diff: "media" },
+    { text: "Yo nunca he pasado de no interesarme alguien a tener un crush por cómo me trató un solo día.", diff: "media" },
+    { text: "Yo nunca he deseado que alguien que me gustaba rompiera con su pareja.", diff: "media" },
+    { text: "Yo nunca he tenido química con alguien del grupo que no era libre para tenerla.", diff: "fuerte" },
+    { text: "Yo nunca he cambiado cómo actúo cuando alguien del grupo específico está presente.", diff: "fuerte" },
+    { text: "Yo nunca he guardado un secreto de alguien del grupo que podría haberlo cambiado todo si salía.", diff: "fuerte" },
+    { text: "Yo nunca he deseado que algo se acabara para que alguien del grupo estuviera disponible.", diff: "fuerte" },
+    { text: "Yo nunca he hecho daño a alguien de forma consciente para protegerme emocionalmente.", diff: "fuerte" },
+    { text: "Yo nunca he amado a alguien y al mismo tiempo deseado que se alejara porque me asustaba.", diff: "fuerte" },
+    { text: "Yo nunca he dicho 'te quiero' y en ese momento no lo sentía del todo.", diff: "fuerte" },
+    { text: "Yo nunca he preferido sufrir en silencio antes que admitir lo que sentía.", diff: "fuerte" },
+    { text: "Yo nunca me he enamorado de alguien que no era libre.", diff: "fuerte" },
+    { text: "Yo nunca he hecho algo que sabía que me iba a doler porque una parte de mí quería ver si podía aguantarlo.", diff: "fuerte" },
+    { text: "Yo nunca he esperado que alguien diera el primer paso sabiendo perfectamente que no lo daría.", diff: "fuerte" },
+    { text: "Yo nunca he repetido un patrón en mis relaciones que sé perfectamente que me hace daño.", diff: "fuerte" },
+    { text: "Yo nunca me he convencido de que algo o alguien no me importaba cuando claramente sí.", diff: "fuerte" },
+    { text: "Yo nunca he confundido a alguien con quien quería que fuera.", diff: "fuerte" },
+    { text: "Yo nunca he esperado que alguien de este grupo me mirara de una forma diferente.", diff: "fuerte" },
+    { text: "Yo nunca he deseado que el tiempo retrocediera para hacer algo diferente con alguien del grupo.", diff: "fuerte" },
+    { text: "Yo nunca he tenido sentimientos simultáneos por dos personas del grupo al mismo tiempo.", diff: "extremo" },
+    { text: "Yo nunca he hecho algo específicamente para que alguien del grupo se fijara en mí.", diff: "extremo" },
+    { text: "Yo nunca he sentido que algo de lo que hay entre mí y alguien del grupo es demasiado para llamarlo amistad.", diff: "extremo" },
+    { text: "Yo nunca he soñado con alguien de este grupo de una forma que cambió cómo lo veía al despertar.", diff: "extremo" },
+    { text: "Yo nunca me he dado cuenta de que alguien me importaba en el momento en que lo estaba perdiendo.", diff: "extremo" },
+    { text: "Yo nunca he tenido un momento esta noche en que me haya costado mantener la compostura por alguien de aquí.", diff: "extremo" },
+    { text: "Yo nunca he querido que alguien del grupo supiera algo sobre mí sin tener que decírselo.", diff: "extremo" },
+    { text: "Yo nunca he imaginado cómo sería todo si hubiera algo entre mí y alguien de esta sala.", diff: "extremo" },
+    { text: "Yo nunca he dejado de hacer algo importante porque alguien del grupo me pedía que me quedara.", diff: "extremo" },
+    { text: "Yo nunca he pensado que alguien de este grupo merecería algo mejor de lo que yo podría darle.", diff: "extremo" },
+    { text: "Yo nunca he retenido algo que sentía por alguien del grupo por miedo a que lo cambiara todo.", diff: "extremo" },
+    { text: "Yo nunca he pensado que una noche con alguien de este grupo podría complicar todo para siempre.", diff: "extremo" },
+    { text: "Yo nunca he necesitado a alguien del grupo de una forma que me ha asustado reconocer.", diff: "extremo" },
+    { text: "Yo nunca he deseado que alguien del grupo supiera exactamente lo que me provoca.", diff: "extremo" },
+    { text: "Yo nunca he contenido lo que sentía esta noche por alguien de esta sala.", diff: "extremo" },
   ],
+
   probable: [
+    // ── ORIGINALES ──────────────────────────────────────────────────────────
     { text: "¿Quién es más probable que se ría en el peor momento posible?", diff: "suave" },
     { text: "¿Quién es más probable que se pierda yendo a un sitio que ya conoce?", diff: "suave" },
     { text: "¿Quién es más probable que llore viendo una película de animación?", diff: "suave" },
@@ -1935,7 +2578,7 @@ const SYSTEM_QUESTIONS = {
     { text: "¿Quién es más probable que tenga el ego más frágil del grupo aunque aparente lo contrario?", diff: "fuerte" },
     { text: "¿Quién es más probable que haya guardado sentimientos por alguien de este grupo?", diff: "fuerte" },
     { text: "¿Quién es más probable que haya mentido sobre sus sentimientos en una conversación importante?", diff: "fuerte" },
-    { text: "¿Quién es más probable que besaría a alguien del grupo si hubiera la excusa perfecta?", diff: "extremo" },
+    { text: "¿Quién es más probable que besaría a alguien del grupo si hubiera la excusa perfecta?", diff: "extremo", noKiss: true },
     { text: "¿Quién es más probable que esté pensando en alguien de aquí en este momento?", diff: "extremo" },
     { text: "¿Quién es más probable que haya sentido algo por más de una persona del grupo a la vez?", diff: "extremo" },
     { text: "¿Quién es más probable que sepa exactamente a quién le gusta alguien del grupo pero no lo diga?", diff: "extremo" },
@@ -1951,6 +2594,99 @@ const SYSTEM_QUESTIONS = {
     { text: "¿Quién es más probable que haya estado a punto de decirle algo importante a alguien de aquí y se haya echado atrás?", diff: "extremo" },
     { text: "¿Quién es más probable que tenga más química con alguien del grupo de lo que admite?", diff: "extremo" },
     { text: "¿Quién es más probable que acabe llorando esta noche si sigue el juego?", diff: "extremo" },
+
+    // ── NUEVAS — SUAVE ───────────────────────────────────────────────────────
+    { text: "¿Quién es más probable que ponga una playlist de los 2000 en cualquier momento de la noche?", diff: "suave" },
+    { text: "¿Quién es más probable que lleve snacks escondidos en el bolso sin decirle a nadie?", diff: "suave" },
+    { text: "¿Quién es más probable que proponga irse a dormir primero pero luego sea el último en irse?", diff: "suave" },
+    { text: "¿Quién es más probable que ya haya buscado en Google qué comer mañana?", diff: "suave" },
+    { text: "¿Quién es más probable que conozca la letra completa de la canción más vergonzosa del grupo?", diff: "suave" },
+    { text: "¿Quién es más probable que tenga el móvil a punto de quedarse sin batería ahora mismo?", diff: "suave" },
+    { text: "¿Quién es más probable que haya buscado 'qué pasa si como esto caducado' en el último mes?", diff: "suave" },
+    { text: "¿Quién es más probable que tenga el desorden más creativo en su habitación?", diff: "suave" },
+    { text: "¿Quién es más probable que haya llorado con un anuncio de Navidad este año?", diff: "suave" },
+    { text: "¿Quién es más probable que sea adicto/a a un reality show que nunca reconocería?", diff: "suave" },
+    { text: "¿Quién es más probable que ponga una alarma cada 5 minutos por las mañanas?", diff: "suave" },
+    { text: "¿Quién es más probable que aún tenga el último mensaje de su ex sin responder?", diff: "suave" },
+    { text: "¿Quién es más probable que se haya inventado una excusa para no ir al gimnasio esta semana?", diff: "suave" },
+    { text: "¿Quién es más probable que sepa exactamente cuántos días lleva sin hacer algo que prometió hacer?", diff: "suave" },
+    { text: "¿Quién es más probable que tenga una conversación de audio de WhatsApp pendiente de escuchar desde hace días?", diff: "suave" },
+    { text: "¿Quién es más probable que sea el/la que siempre se olvida de responder en los grupos de WhatsApp?", diff: "suave" },
+    { text: "¿Quién es más probable que tenga anotado en el teléfono algo completamente absurdo?", diff: "suave" },
+    { text: "¿Quién es más probable que llore si le preguntan por su mascota o ex mascota?", diff: "suave" },
+    { text: "¿Quién es más probable que tenga la misma foto de perfil desde hace más de un año?", diff: "suave" },
+    { text: "¿Quién es más probable que sea el primero en caer rendido si pusieran una peli aburrida?", diff: "suave" },
+    { text: "¿Quién es más probable que tenga un playlist de 'canciones tristes para llorar solo' perfectamente curado?", diff: "suave" },
+    { text: "¿Quién es más probable que haya dormido con ropa de otra persona sin devolverla?", diff: "suave" },
+    { text: "¿Quién es más probable que sea el que siempre termina los snacks antes de que llegue el resto?", diff: "suave" },
+    { text: "¿Quién es más probable que tenga el historial de YouTube más vergonzoso del grupo?", diff: "suave" },
+    { text: "¿Quién es más probable que haya practicado un discurso frente al espejo en el último mes?", diff: "suave" },
+
+    // ── NUEVAS — MEDIA ───────────────────────────────────────────────────────
+    { text: "¿Quién es más probable que haya bloqueado y desbloqueado a alguien más de tres veces?", diff: "media" },
+    { text: "¿Quién es más probable que tenga una historia de Instagram que guardó solo para que alguien específico la viera?", diff: "media" },
+    { text: "¿Quién es más probable que haya buscado a un ex en LinkedIn en el último mes?", diff: "media" },
+    { text: "¿Quién es más probable que haya hecho algo irracional a las 2 de la mañana en los últimos tres meses?", diff: "media" },
+    { text: "¿Quién es más probable que tenga el grupo de WhatsApp con su ex silenciado pero sin eliminar?", diff: "media" },
+    { text: "¿Quién es más probable que haya llorado en un baño en los últimos seis meses?", diff: "media" },
+    { text: "¿Quién es más probable que haya stalkeado al novio/novia de su ex?", diff: "media" },
+    { text: "¿Quién es más probable que tenga capturas de pantalla guardadas por si acaso?", diff: "media" },
+    { text: "¿Quién es más probable que haya dicho 'me da igual' y haya estado llorando internamente?", diff: "media" },
+    { text: "¿Quién es más probable que haya enviado un mensaje de madrugada que se ha arrepentido al día siguiente?", diff: "media" },
+    { text: "¿Quién es más probable que haya mentido sobre su paradero en los últimos tres meses?", diff: "media" },
+    { text: "¿Quién es más probable que haya checkeado si alguien estaba en línea a la hora de dormir?", diff: "media" },
+    { text: "¿Quién es más probable que haya dado like por error en una foto muy antigua de alguien que estaba stalkeando?", diff: "media" },
+    { text: "¿Quién es más probable que haya cambiado algo de sí mismo/a por alguien que ya no está en su vida?", diff: "media" },
+    { text: "¿Quién es más probable que tenga algo que confesarle a alguien de aquí desde hace meses?", diff: "media" },
+    { text: "¿Quién es más probable que haya pedido consejo sobre alguien del grupo a una persona que no es del grupo?", diff: "media" },
+    { text: "¿Quién es más probable que haya escrito un mensaje larguísimo y lo haya borrado sin enviar?", diff: "media" },
+    { text: "¿Quién es más probable que haya ignorado una señal de alerta en una persona porque no quería que fuera verdad?", diff: "media" },
+    { text: "¿Quién es más probable que haya fingido estar ocupado/a justo cuando alguien específico le escribió?", diff: "media" },
+    { text: "¿Quién es más probable que haya tomado una decisión importante dejándose llevar por sus emociones y lo haya lamentado?", diff: "media" },
+    { text: "¿Quién es más probable que tenga envidia de algo de alguien del grupo aunque lo niegue?", diff: "media" },
+    { text: "¿Quién es más probable que sepa perfectamente cuándo alguien le está mintiendo pero prefiere no decir nada?", diff: "media" },
+    { text: "¿Quién es más probable que haya tenido un crush con alguien de quien nunca lo confesaría?", diff: "media" },
+    { text: "¿Quién es más probable que haya usado el humor para evitar una conversación que era necesaria?", diff: "media" },
+    { text: "¿Quién es más probable que haya actuado indiferente delante de alguien que le importaba muchísimo?", diff: "media" },
+
+    // ── NUEVAS — FUERTE ──────────────────────────────────────────────────────
+    { text: "¿Quién es más probable que lleve meses procesando en silencio algo que nadie del grupo sabe?", diff: "fuerte" },
+    { text: "¿Quién es más probable que tenga sentimientos por alguien del grupo que nunca ha reconocido en voz alta?", diff: "fuerte" },
+    { text: "¿Quién es más probable que haya elegido a la persona equivocada más de una vez sabiendo que lo era?", diff: "fuerte" },
+    { text: "¿Quién es más probable que haya dejado ir a alguien importante por miedo y todavía le pesa?", diff: "fuerte" },
+    { text: "¿Quién es más probable que necesite más de este grupo de lo que deja ver?", diff: "fuerte" },
+    { text: "¿Quién es más probable que haya cambiado quién era para que alguien del grupo lo aceptara?", diff: "fuerte" },
+    { text: "¿Quién es más probable que haya protegido a alguien del grupo más veces de las que ese alguien sabe?", diff: "fuerte" },
+    { text: "¿Quién es más probable que tenga una opinión de sí mismo/a que difiere mucho de la que el grupo tiene?", diff: "fuerte" },
+    { text: "¿Quién es más probable que haya fingido que superó algo que claramente no ha superado?", diff: "fuerte" },
+    { text: "¿Quién es más probable que tenga miedo de lo que pasaría si dijera exactamente lo que piensa?", diff: "fuerte" },
+    { text: "¿Quién es más probable que haya construido una versión de sí mismo/a que ya no sabe cómo deshacer?", diff: "fuerte" },
+    { text: "¿Quién es más probable que haya hecho algo por alguien del grupo que ese alguien nunca sabrá?", diff: "fuerte" },
+    { text: "¿Quién es más probable que esté pasando por algo difícil ahora mismo que no le ha contado a nadie de aquí?", diff: "fuerte" },
+    { text: "¿Quién es más probable que haya querido a alguien de una forma que le asustó?", diff: "fuerte" },
+    { text: "¿Quién es más probable que tenga algo que decirle a alguien de aquí que cambiaría la dinámica del grupo?", diff: "fuerte" },
+    { text: "¿Quién es más probable que lleve más tiempo solo/a de lo que admite?", diff: "fuerte" },
+    { text: "¿Quién es más probable que haya sacrificado algo importante por alguien que no lo valoró?", diff: "fuerte" },
+    { text: "¿Quién es más probable que se haya arrepentido de no haber dicho algo a tiempo?", diff: "fuerte" },
+    { text: "¿Quién es más probable que tenga un límite que el grupo cruza sin saberlo?", diff: "fuerte" },
+    { text: "¿Quién es más probable que haya mentido sobre estar bien en el momento en que más lo necesitaba?", diff: "fuerte" },
+
+    // ── NUEVAS — EXTREMO ─────────────────────────────────────────────────────
+    { text: "¿Quién es más probable que esté conteniendo algo esta noche que si lo dijera lo cambiaría todo?", diff: "extremo" },
+    { text: "¿Quién es más probable que tenga sentimientos por alguien de este grupo que no sabe que los tiene?", diff: "extremo" },
+    { text: "¿Quién es más probable que haya estado a punto de hacer una confesión al alguien del grupo más de una vez?", diff: "extremo" },
+    { text: "¿Quién es más probable que necesite escuchar algo de alguien del grupo que nadie le ha dicho todavía?", diff: "extremo" },
+    { text: "¿Quién es más probable que haya reescrito mentalmente una conversación con alguien del grupo cientos de veces?", diff: "extremo" },
+    { text: "¿Quién es más probable que haya estado enamorado/a de alguien del grupo y haya actuado como si nada?", diff: "extremo" },
+    { text: "¿Quién es más probable que esté esperando esta noche que alguien haga o diga algo específico?", diff: "extremo" },
+    { text: "¿Quién es más probable que haya cambiado cómo se presenta ante el grupo por alguien concreto de aquí?", diff: "extremo" },
+    { text: "¿Quién es más probable que tenga la historia más complicada con alguien de este grupo que nadie conoce en su totalidad?", diff: "extremo" },
+    { text: "¿Quién es más probable que haya deseado, aunque sea una vez, que todo fuera diferente con alguien de aquí?", diff: "extremo" },
+    { text: "¿Quién es más probable que sepa exactamente lo que el grupo diría si conociera su secreto más grande?", diff: "extremo" },
+    { text: "¿Quién es más probable que haya sentido esta noche algo por alguien del grupo que no esperaba sentir?", diff: "extremo" },
+    { text: "¿Quién es más probable que acabe esta noche siendo más honesto/a de lo que planeaba ser?", diff: "extremo" },
+    { text: "¿Quién es más probable que tenga la conexión más intensa con alguien de aquí aunque nadie lo haya dicho nunca en voz alta?", diff: "extremo" },
+    { text: "¿Quién es más probable que salga de esta noche con algo diferente respecto a alguien del grupo?", diff: "extremo" },
   ]
 };
 
@@ -1969,6 +2705,18 @@ const CLASE = {
   chicos: ["Samuel","Hugo","Yago","Eric","Abel","Daniel","Fernando","Lucas","Andrés","Enrique","Astor","Rodrigo","Beltran","Matteo"]
 };
 
+const CLASE_B = {
+  chicas: ["Adriana","Elena","Pía","Valle","Carola","Cayetana","Lara","Eva","Emilia","Valeria","Uxue"],
+  chicos: ["Lior","Adrián","Daniel","Leo","Ian","Javier","Sergio","Marco","Marcos","Álvaro"]
+};
+
+// Returns display name: adds " (B)" suffix for clase B members
+function displayName(nombre) {
+  const first = normStr(nombre.split(' ')[0]);
+  const inB = CLASE_B.chicas.some(n => normStr(n) === first) || CLASE_B.chicos.some(n => normStr(n) === first);
+  return inB ? `${nombre.split(' ')[0]} (B)` : nombre.split(' ')[0];
+}
+
 function normStr(s) {
   return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
@@ -1976,8 +2724,8 @@ function normStr(s) {
 function getGenero(nombre) {
   if (playerGenders[nombre]) return playerGenders[nombre];
   const first = normStr(nombre.split(' ')[0]);
-  if (CLASE.chicas.some(n => normStr(n) === first)) return 'chica';
-  if (CLASE.chicos.some(n => normStr(n) === first)) return 'chico';
+  if (CLASE.chicas.some(n => normStr(n) === first) || CLASE_B.chicas.some(n => normStr(n) === first)) return 'chica';
+  if (CLASE.chicos.some(n => normStr(n) === first) || CLASE_B.chicos.some(n => normStr(n) === first)) return 'chico';
   return null;
 }
 
@@ -1996,7 +2744,6 @@ let scores = {};
 let comodines = {};
 let historial = [];
 let timerInterval = null;
-let activeTheme = 'all';
 let gameState = {
   currentIndex: 0,
   turns: 0,
@@ -2011,53 +2758,6 @@ let setupActiveTab = 'truth';
 
 // ============================================================
 // HOT TAKES
-// ============================================================
-const HOT_TAKES = [
-  "¿Quién del grupo sería el peor novio/novia? Justifícate.",
-  "¿Quién del grupo tiene más papeletas de quedarse soltero/a toda la vida?",
-  "¿Quién del grupo flirtea sin darse cuenta de que está flirteando?",
-  "¿Quién del grupo tiene el peor gusto para ligar?",
-  "¿Quién del grupo daría más drama en una relación?",
-  "¿Quién del grupo tiene más ego romántico del que debería?",
-  "¿Quién del grupo caería más rápido si alguien le diera un poco de atención?",
-  "¿Quién del grupo es el más difícil de conquistar y por qué?",
-  "¿Quién del grupo tiene más posibilidades de enamorarse esta noche?",
-  "¿Quién del grupo haría la declaración más torpe de la historia?",
-];
-
-// ============================================================
-// TEMAS
-// ============================================================
-const THEME_TAGS = {
-  crush:     ['crush','gusta','beso','besar','atractiv','cita','flirt','coquet','químic','enamorar','seduci','ligar'],
-  verguenza: ['vergüenza','vergonzoso','metedura','ridículo','incómodo','peor momento'],
-  secretos:  ['secreto','mentira','cotilleo','nunca has','confesa','oculta','nadie sabe','privado'],
-  hottakes:  ['quién del grupo'],
-};
-
-function matchesTheme(q, theme) {
-  if (theme === 'all') return true;
-  if (theme === 'hottakes') return q.isHotTake === true;
-  const tags = THEME_TAGS[theme] || [];
-  return tags.some(t => q.text.toLowerCase().includes(t));
-}
-
-function setTheme(theme, btn) {
-  activeTheme = theme;
-  document.querySelectorAll('.theme-pill').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  if (theme === 'hottakes') ensureHotTakes();
-  renderSetupQList();
-}
-
-function ensureHotTakes() {
-  HOT_TAKES.forEach(text => {
-    if (!questions.truth.some(q => q.text === text)) {
-      questions.truth.push({ text, diff: 'fuerte', system: false, isHotTake: true });
-    }
-  });
-}
-
 // ============================================================
 // EMOJI PICKER
 // ============================================================
@@ -2104,7 +2804,7 @@ function openHistorial() {
     list.innerHTML = [...historial].reverse().map(h => `
       <div class="historial-item">
         <span class="hist-player">${h.player.split(' ')[0]}</span>
-        <span class="hist-type hist-${h.type}">${h.type === 'truth' ? '💬' : h.type === 'dare' ? '🔥' : h.type === 'nunca' ? '🙅' : h.type === 'probable' ? '🤔' : '💘'} ${h.type}</span>
+        <span class="hist-type hist-${h.type}">${h.type === 'truth' ? '💬' : h.type === 'dare' ? '🔥' : h.type === 'nunca' ? '🙅' : h.type === 'probable' ? '🤔' : h.type === 'botella' ? '🍾' : '💘'} ${h.type}</span>
         <span style="flex:1;color:var(--muted)">${h.text}</span>
       </div>
     `).join('');
@@ -2180,6 +2880,7 @@ function switchSetupTab(type) {
 function getFilteredQuestions(type) {
   const diff = document.getElementById('difficultyFilter').value;
   const noPhone = document.getElementById('noPhoneToggle')?.checked;
+  const noKiss  = document.getElementById('noKissToggle')?.checked;
   const allowed = diff === 'soloextremo' ? ['extremo'] :
                   diff === 'extremo' ? ['suave','media','fuerte','extremo'] :
                   diff === 'all'     ? ['suave','media','fuerte'] :
@@ -2187,8 +2888,7 @@ function getFilteredQuestions(type) {
                   diff === 'fuerte'  ? ['fuerte'] : ['suave'];
   return questions[type].filter(q =>
     allowed.includes(q.diff) &&
-    matchesTheme(q, activeTheme) &&
-    !(noPhone && q.noPhone)
+    !(noPhone && q.noPhone) && !(noKiss && q.noKiss)
   );
 }
 
@@ -2293,6 +2993,7 @@ function updateGameUI() {
   document.getElementById('genderCard').className = 'question-card';
   document.getElementById('nuncaCard').className = 'question-card';
   document.getElementById('probableCard').className = 'question-card';
+  document.getElementById('botellaCard').className  = 'question-card';
 
   // Stop timer
   stopTimer();
@@ -2413,10 +3114,10 @@ function chooseType(type) {
                   diff === 'fuerte'  ? ['fuerte'] : ['suave'];
 
   const noPhone = document.getElementById('noPhoneToggle')?.checked;
+  const noKiss  = document.getElementById('noKissToggle')?.checked;
   const pool = questions[type].filter(q =>
     allowed.includes(q.diff) &&
-    matchesTheme(q, activeTheme) &&
-    !(noPhone && q.noPhone)
+    !(noPhone && q.noPhone) && !(noKiss && q.noKiss)
   );
   const used = type === 'truth' ? gameState.usedTruth : gameState.usedDare;
 
@@ -2487,6 +3188,7 @@ function chooseType(type) {
 function chooseNunca() {
   const diff = document.getElementById('difficultyFilter').value;
   const noPhone = document.getElementById('noPhoneToggle')?.checked;
+  const noKiss  = document.getElementById('noKissToggle')?.checked;
   const allowed = diff === 'soloextremo' ? ['extremo'] :
                   diff === 'extremo' ? ['suave','media','fuerte','extremo'] :
                   diff === 'all'     ? ['suave','media','fuerte'] :
@@ -2494,7 +3196,7 @@ function chooseNunca() {
                   diff === 'fuerte'  ? ['fuerte'] : ['suave'];
 
   const pool = questions.nunca.filter(q =>
-    allowed.includes(q.diff) && !(noPhone && q.noPhone)
+    allowed.includes(q.diff) && !(noPhone && q.noPhone) && !(noKiss && q.noKiss)
   );
 
   if (!gameState.usedNunca) gameState.usedNunca = [];
@@ -2568,7 +3270,10 @@ function selectGender(genero) {
 
 function _showPozoForPlayer(player, genero) {
   const opuestoGenero = genero === 'chica' ? 'chico' : 'chica';
-  const listaTodos = opuestoGenero === 'chica' ? CLASE.chicas : CLASE.chicos;
+  // Combined list from both classes for filling up to 4
+  const listaTodos = opuestoGenero === 'chica'
+    ? [...CLASE.chicas, ...CLASE_B.chicas]
+    : [...CLASE.chicos, ...CLASE_B.chicos];
 
   let pool = players.filter(p => p !== player && getGenero(p) === opuestoGenero);
   pool = pool.sort(() => Math.random() - 0.5);
@@ -2584,7 +3289,7 @@ function _showPozoForPlayer(player, genero) {
 
   const grid = document.getElementById('pozoGrid');
   grid.innerHTML = selected.map((persona, i) => {
-    const nombre = persona.split(' ')[0];
+    const nombre = displayName(persona);
     const optionsHtml = opciones.map(o => `<option value="${o}">${o}</option>`).join('');
     return `
       <div class="pozo-row">
@@ -2600,7 +3305,7 @@ function _showPozoForPlayer(player, genero) {
   document.getElementById('choiceContainer').style.display = 'none';
   document.getElementById('questionCard').className = 'question-card';
   document.getElementById('pozoCard').className = 'question-card visible type-pozo';
-  addToHistorial(player, 'pozo', selected.map(p => p.split(' ')[0]).join(', '));
+  addToHistorial(player, 'pozo', selected.map(p => displayName(p)).join(', '));
 }
 
 function syncPozoSelects() {
@@ -2656,6 +3361,7 @@ let probableVotes = {}; // { playerName: voteCount }
 function chooseProbable() {
   const diff = document.getElementById('difficultyFilter').value;
   const noPhone = document.getElementById('noPhoneToggle')?.checked;
+  const noKiss  = document.getElementById('noKissToggle')?.checked;
   const allowed = diff === 'soloextremo' ? ['extremo'] :
                   diff === 'extremo' ? ['suave','media','fuerte','extremo'] :
                   diff === 'all'     ? ['suave','media','fuerte'] :
@@ -2663,7 +3369,7 @@ function chooseProbable() {
                   diff === 'fuerte'  ? ['fuerte'] : ['suave'];
 
   const pool = questions.probable.filter(q =>
-    allowed.includes(q.diff) && !(noPhone && q.noPhone)
+    allowed.includes(q.diff) && !(noPhone && q.noPhone) && !(noKiss && q.noKiss)
   );
 
   if (!gameState.usedProbable) gameState.usedProbable = [];
@@ -2754,6 +3460,7 @@ function switchViewTab(type) {
   document.getElementById('viewTabDare').className     = 'q-tab' + (type === 'dare'     ? ' active-dare'     : '');
   document.getElementById('viewTabNunca').className    = 'q-tab' + (type === 'nunca'    ? ' active-nunca'    : '');
   document.getElementById('viewTabProbable').className = 'q-tab' + (type === 'probable' ? ' active-probable' : '');
+  document.getElementById('viewTabBotella').className  = 'q-tab' + (type === 'botella'  ? ' active-botella'  : '');
   renderViewList();
 }
 
@@ -2765,9 +3472,9 @@ function setViewDiff(diff, btn) {
 }
 
 function renderViewList() {
-  const pool = viewActiveDiff === 'all'
-    ? questions[viewActiveTab]
-    : questions[viewActiveTab].filter(q => q.diff === viewActiveDiff);
+  const pool = viewActiveTab === 'botella'
+    ? (viewActiveDiff === 'all' ? BOTELLA_DARES : BOTELLA_DARES.filter(q => q.diff === viewActiveDiff))
+    : (viewActiveDiff === 'all' ? questions[viewActiveTab] : questions[viewActiveTab].filter(q => q.diff === viewActiveDiff));
 
   document.getElementById('viewCount').textContent =
     `${pool.length} pregunta${pool.length !== 1 ? 's' : ''}`;
@@ -2785,7 +3492,7 @@ function renderViewList() {
 
 function updateViewTotal() {
   document.getElementById('viewTotal').textContent =
-    questions.truth.length + questions.dare.length + questions.nunca.length + questions.probable.length;
+    questions.truth.length + questions.dare.length + questions.nunca.length + questions.probable.length + BOTELLA_DARES.length;
 }
 
 
@@ -2794,6 +3501,178 @@ function showScreen(id) {
   document.getElementById('screen-' + id).classList.add('active');
   if (id === 'setup') renderSetupQList();
   if (id === 'view') { updateViewTotal(); renderViewList(); }
+}
+
+// ============================================================
+// BOTELLA
+// ============================================================
+const BOTELLA_DARES = [
+  // suave
+  { text: "Hacéis el reto del espejo: uno hace una cara y el otro la imita exactamente.", diff: "suave" },
+  { text: "Los dos tienen que decir en voz alta cuál sería el mejor plan que harían juntos.", diff: "suave" },
+  { text: "Uno le hace un cumplido al otro. Tiene que ser real, no un chiste.", diff: "suave" },
+  { text: "Hacéis un duelo de miradas: el primero que parpadea pierde y cuenta un secreto.", diff: "suave" },
+  { text: "Uno describe al otro en tres palabras. El otro decide si son precisas.", diff: "suave" },
+  { text: "Los dos tienen que hacer la foto más dramática posible juntos.", diff: "suave" },
+  { text: "Uno le dice al otro la primera palabra que le vino a la mente cuando se conocieron.", diff: "suave" },
+  // media
+  { text: "Intercambiad un objeto personal durante el resto de la noche.", diff: "media" },
+  { text: "Los dos tienen que decir algo sincero que piensan el uno del otro.", diff: "media" },
+  { text: "Uno tiene que adivinar tres cosas sobre el otro. Si falla, cuenta algo personal.", diff: "media" },
+  { text: "Uno le hace un masaje de hombros al otro durante 30 segundos.", diff: "media" },
+  { text: "Los dos confiesan algo que nunca le han dicho al otro.", diff: "media" },
+  { text: "Hacéis un pacto: el que pierda el siguiente reto tiene que hacer algo que diga el otro.", diff: "media" },
+  { text: "Os miráis a los ojos en silencio durante 15 segundos sin reíros.", diff: "media" },
+  { text: "Los dos tienen que bailar juntos la próxima canción que suene.", diff: "media" },
+  // fuerte
+  { text: "Abrazaos durante al menos 10 segundos.", diff: "fuerte" },
+  { text: "Uno tiene que susurrarle algo al oído al otro. No puede repetirlo en voz alta.", diff: "fuerte" },
+  { text: "Los dos dicen en voz alta qué es lo que más les gusta del otro físicamente.", diff: "fuerte" },
+  { text: "Uno le da la mano al otro durante los próximos dos turnos.", diff: "fuerte" },
+  { text: "Los dos cuentan algo que nunca pensaban decirse.", diff: "fuerte" },
+  // extremo
+  { text: "Besaos (no en la boca).", diff: "extremo", noKiss: true },
+  { text: "Uno le dice al otro algo que lleva tiempo queriendo decirle pero no se ha atrevido.", diff: "extremo" },
+  { text: "Los dos tienen que decir, de uno en uno, si hay o ha habido algo entre vosotros.", diff: "extremo" },
+];
+
+let bottleSpinning = false;
+let bottleAngle    = 0;
+let bottleAnimFrame = null;
+let bottleTargetIdx = null; // index in players[] that the bottle points to
+let bottleLeftIdx   = null; // index of the player to their left in the circle
+
+function getBotellaPool() {
+  const diff = document.getElementById('difficultyFilter').value;
+  const allowed = {
+    suave:      ['suave'],
+    media:      ['suave','media'],
+    fuerte:     ['fuerte'],
+    all:        ['suave','media','fuerte'],
+    extremo:    ['suave','media','fuerte','extremo'],
+    soloextremo:['extremo'],
+  }[diff] || ['suave','media','fuerte'];
+  const noKiss = document.getElementById('noKissToggle')?.checked;
+  return BOTELLA_DARES.filter(d => allowed.includes(d.diff) && !(noKiss && d.noKiss));
+}
+
+function renderBottleCircle() {
+  const wrap = document.getElementById('botellaPlayers');
+  wrap.innerHTML = '';
+  const n = players.length;
+  const cx = 150, cy = 150, r = 120; // center and radius of the 300×300 wrap
+  players.forEach((p, i) => {
+    // angle: start at top (−90°), go clockwise
+    const angle = (2 * Math.PI * i / n) - Math.PI / 2;
+    const x = cx + r * Math.cos(angle);
+    const y = cy + r * Math.sin(angle);
+    const el = document.createElement('div');
+    el.className = 'bottle-circle-player';
+    el.id = `bcp-${i}`;
+    el.style.left = `${x}px`;
+    el.style.top  = `${y}px`;
+    el.innerHTML = `
+      <span class="bottle-circle-emoji" id="bce-${i}">${playerEmojis[p] || '😀'}</span>
+      <span class="bottle-circle-name">${p.split(' ')[0]}</span>`;
+    wrap.appendChild(el);
+  });
+}
+
+function chooseBotella() {
+  bottleTargetIdx = null;
+  bottleLeftIdx   = null;
+  bottleSpinning  = false;
+  bottleAngle     = 0;
+  document.getElementById('bottleSvg').style.transform = 'rotate(0deg)';
+  document.getElementById('botellaHint').textContent   = 'Toca la botella para girar';
+  document.getElementById('botellaDare').style.display      = 'none';
+  document.getElementById('botellaDiffBadge').style.display = 'none';
+  document.getElementById('botellaNextBtn').style.display   = 'none';
+  document.getElementById('botellaSkipBtn').style.display   = 'none';
+
+  renderBottleCircle();
+
+  document.getElementById('choiceContainer').style.display = 'none';
+  ['questionCard','pozoCard','genderCard','nuncaCard','probableCard'].forEach(id =>
+    document.getElementById(id).className = 'question-card'
+  );
+  document.getElementById('botellaCard').className = 'question-card visible type-botella';
+}
+
+function spinBottle() {
+  if (bottleSpinning || bottleTargetIdx !== null) return;
+  bottleSpinning = true;
+  document.getElementById('botellaHint').textContent = '🍾 Girando...';
+
+  const n = players.length;
+  // Pick random target player
+  const target = Math.floor(Math.random() * n);
+  bottleTargetIdx = target;
+  // "left" = next index clockwise in the circle (i+1) % n
+  bottleLeftIdx   = (target + 1) % n;
+
+  // The bottle SVG arrow points up (0°). Players are placed starting at -90°
+  // so player i is at angle: (360/n * i) - 90 degrees.
+  // We want the arrow to point at player `target`:
+  const playerAngleDeg = (360 / n) * target - 90;
+  // Add several full spins for drama
+  const fullSpins = (5 + Math.floor(Math.random() * 4)) * 360;
+  const targetAngle = bottleAngle + fullSpins + (playerAngleDeg - (bottleAngle % 360) + 360) % 360;
+
+  const duration = 2800;
+  const start = performance.now();
+  const startAngle = bottleAngle;
+
+  function easeOut(t) { return 1 - Math.pow(1 - t, 4); }
+
+  function frame(now) {
+    const t = Math.min((now - start) / duration, 1);
+    bottleAngle = startAngle + (targetAngle - startAngle) * easeOut(t);
+    document.getElementById('bottleSvg').style.transform = `rotate(${bottleAngle}deg)`;
+    if (t < 1) {
+      bottleAnimFrame = requestAnimationFrame(frame);
+    } else {
+      bottleSpinning = false;
+      revealBottlePlayers();
+    }
+  }
+  bottleAnimFrame = requestAnimationFrame(frame);
+}
+
+function revealBottlePlayers() {
+  const main = bottleTargetIdx;
+  const left = bottleLeftIdx;
+
+  // Highlight
+  players.forEach((_, i) => {
+    const chip  = document.getElementById(`bcp-${i}`);
+    const emoji = document.getElementById(`bce-${i}`);
+    if (i === main)  { chip.classList.add('hi-main'); emoji.classList.add('hi-main'); }
+    if (i === left)  { chip.classList.add('hi-left'); emoji.classList.add('hi-left'); }
+  });
+
+  // Pick a dare respecting difficulty
+  const pool = getBotellaPool();
+  const pick = pool.length ? pool[Math.floor(Math.random() * pool.length)] : BOTELLA_DARES[0];
+
+  const diffLabels = { suave:'🟢 Suave', media:'🟡 Media', fuerte:'🔴 Fuerte', extremo:'🟣 Extremo' };
+  const p1 = players[main].split(' ')[0];
+  const p2 = players[left].split(' ')[0];
+
+  document.getElementById('botellaHint').textContent = `${p1} 👉 ${p2}`;
+
+  const diffBadge = document.getElementById('botellaDiffBadge');
+  diffBadge.textContent = diffLabels[pick.diff] || '';
+  diffBadge.style.display = 'block';
+
+  const dareEl = document.getElementById('botellaDare');
+  dareEl.textContent = pick.text;
+  dareEl.style.display = 'block';
+
+  document.getElementById('botellaNextBtn').style.display = '';
+  document.getElementById('botellaSkipBtn').style.display = '';
+
+  addToHistorial(players[gameState.currentIndex], 'botella', `${p1} & ${p2} — ${pick.text}`);
 }
 
 // ============================================================
@@ -2823,9 +3702,11 @@ function syncModeButtons() {
   const showPozo     = document.getElementById('togglePozo').checked;
   const showNunca    = document.getElementById('toggleNunca').checked;
   const showProbable = document.getElementById('toggleProbable').checked;
-  document.getElementById('pozoBtn').style.display     = showPozo     ? '' : 'none';
-  document.getElementById('btnNunca').style.display    = showNunca    ? '' : 'none';
-  document.getElementById('btnProbable').style.display = showProbable ? '' : 'none';
+  const showBotella  = document.getElementById('toggleBotella').checked;
+  document.getElementById('pozoBtn').style.display      = showPozo     ? '' : 'none';
+  document.getElementById('btnNunca').style.display     = showNunca    ? '' : 'none';
+  document.getElementById('btnProbable').style.display  = showProbable ? '' : 'none';
+  document.getElementById('btnBotella').style.display   = showBotella  ? '' : 'none';
 }
 
 // Wire shame toggle to slider row
